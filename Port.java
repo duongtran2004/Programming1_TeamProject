@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 import java.util.Random;
 public class Port {
@@ -36,12 +35,15 @@ public class Port {
     }
 
     public ArrayList<Vehicle> getVehiclesList(){
-        return  this.vehicles;
+        return this.vehicles;
     }
 
     public ArrayList<Container> getContainerList(){
         return this.containers;
     }
+
+    public String toString(){
+        return "Port id: " + this.Pid + "\n" + "Port name: "+ this.name + "\n" + "Port latitude: " + this.latitude + "\n" + "Port longtitude: " + this.longtitude + "\n" + "Storing capacity: "+ this.storing_capacity + "\n" + "Landing ability: " + this.landing_ability;}
 
     public static void createNewPort(){
         Scanner scanner = new Scanner(System.in);
