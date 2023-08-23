@@ -23,6 +23,8 @@ public class Trip {
         this.date_of_arrival = date_of_arrival;
         this.date_of_departure = date_of_departure;
     }
+    public String toString(){
+        return "Trip id: " + this.Tid + "\n" + "Vehicle: " + this.vehicle + "\n" + "Status: " + this.status + "\n" + "Departure Port: " + this.D_port + "\n" + "Arrival Port: " + this.A_port + "\n" + "Date of Departure: " + this.date_of_departure + "\n"+ "Date of Arrival: " + this.date_of_arrival + "\n";}
 
     public String getTid(){
         return this.Tid;
