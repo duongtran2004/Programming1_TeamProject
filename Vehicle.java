@@ -21,6 +21,10 @@ public class Vehicle {
         this.carrying_capacity = carrying_capacity;
     }
 
+    public String toString(){
+        return "Vehicle Id: " + this.Vid + "\n" + "Vehicle name: " + this.name + "\n" + "Current Port: " + this.current_port + "\n" + "Current Trip: " + this.current_trip + "\n" + "Fuel capacity: " + this.fuel_capacity + "\n" + "Current fuel: " + this.current_fuel + "\n" + "Carrying capacity: " + this.carrying_capacity + "\n";}
+
+
     public String getVid(){
         return this.Vid;
     }
@@ -38,6 +42,8 @@ public class Vehicle {
     public static ArrayList<Vehicle> getVehicles(){
         return Vehicle.vehicles;
     }
+
+
 
 
     public static void createNewVehicle(){
