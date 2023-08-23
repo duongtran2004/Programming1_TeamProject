@@ -18,10 +18,12 @@ public class Container {
         this.weight = weight;
     }
 
+    public String toString(){
+        return "Container id: " + this.Cid + "\n" + "Container name: " + this.name + "\n" + "Weight: " + this.weight + "\n" + "Per Km Fuel Consumption on Ship " + this.fuel_consumption_per_km_on_ship + "\n" + "Per Km Fuel Consumption on Truck: " + this.fuel_consumption_per_km_on_truck + "\n" + "Date of Departure: ";}
+
     public static void createNewContainer(){
         Scanner scanner = new Scanner(System.in);
         int selection = 0;
-
         while (true){
             System.out.println("Choose 0 for Dry Storage, 1 for Open Top, 2 for Open Side, 3 for Refridgerated, 4 for Liquid");
             selection = scanner.nextInt();
