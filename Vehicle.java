@@ -1,8 +1,9 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.Random;
-public class Vehicle {
+public class Vehicle implements Serializable {
     private String Vid;
     private String name;
     private Port current_port;
@@ -11,7 +12,7 @@ public class Vehicle {
     private double current_fuel;
     private double carrying_capacity;
     private ArrayList<Container> container_list = new ArrayList<Container>();
-    private static ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
+
 
 
     public Vehicle(String Vid, String name, double fuel_capacity, double carrying_capacity){
@@ -40,18 +41,60 @@ public class Vehicle {
     }
 
     public static ArrayList<Vehicle> getVehicles(){
-        return Vehicle.vehicles;
+        ArrayList<Vehicle> vehicle_list = new ArrayList<Vehicle>();
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("vehicle.txt"));
+            while (true){
+                try {
+                    Vehicle vehicle = (Vehicle) ois.readObject();
+                    vehicle_list.add(vehicle);
+                } catch (EOFException e){
+                    break;
+                } catch (ClassNotFoundException e){
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return vehicle_list;
     }
 
-
-
+    public static void inputVehicleIntoFile(File file, Vehicle vehicle){
+        if (file.length() == 0 ){
+            try{
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("vehicle.txt"));
+                oos.writeObject(vehicle);
+                oos.close();
+            } catch (FileNotFoundException e){
+                e.printStackTrace();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            System.out.println("append");
+            try{
+                AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("vehicle.txt", true));
+                oos.writeObject(vehicle);
+                oos.close();
+            } catch (FileNotFoundException e){
+                e.printStackTrace();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
 
     public static void createNewVehicle(){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Choose 0 for ship, 1 for basic truck, 2 for reefer truck, 3 for tanker truck");
-        int selection = scanner.nextInt();
         System.out.println("Please inout the name of the vehicle");
         String name = scanner.nextLine();
+        System.out.println("Choose 0 for ship, 1 for basic truck, 2 for reefer truck, 3 for tanker truck");
+        int selection = scanner.nextInt();
         System.out.println("Please input the fuel capacity of the vehicle");
         double fuel_capacity = scanner.nextDouble();
         System.out.println("Please input the carrying capacity of the vehicle");
@@ -61,30 +104,30 @@ public class Vehicle {
         for (int i =0; i<=10; i++){
             Vid = Vid + random_id.nextInt(10);
         }
+        File file = new File("vehicle.txt");
         if (selection == 0){
-            ship new_ship = new ship("SH"+Vid, name, fuel_capacity, carrying_capacity);
-            vehicles.add(new_ship);
+           Vehicle vehicle = new ship("SH"+Vid, name, fuel_capacity, carrying_capacity);
+           inputVehicleIntoFile(file, vehicle);
+
         }
         else if (selection == 1){
-            basic_truck new_basic_truck = new basic_truck("BT"+ Vid, name, fuel_capacity, carrying_capacity);
-            vehicles.add(new_basic_truck);
+            Vehicle vehicle = new basic_truck("BT"+Vid, name, fuel_capacity, carrying_capacity);
+            inputVehicleIntoFile(file, vehicle);
         }
 
         else if (selection == 2){
-            reefer_truck new_reefer_truck = new reefer_truck("RT"+ Vid, name, fuel_capacity, carrying_capacity);
-            vehicles.add(new_reefer_truck);
+            Vehicle vehicle = new reefer_truck("RT"+Vid, name, fuel_capacity, carrying_capacity);
+            inputVehicleIntoFile(file, vehicle);
         }
 
         else {
-            tanker_truck new_tanker_truck = new tanker_truck("TT"+ Vid, name, fuel_capacity, carrying_capacity);
-            vehicles.add(new_tanker_truck);
+            Vehicle vehicle = new tanker_truck("TT"+Vid, name, fuel_capacity, carrying_capacity);
+            inputVehicleIntoFile(file, vehicle);
         }
-
-
     }
 
     public static Vehicle queryVehiclebyID(String Vid){
-        for (Vehicle vehicle: vehicles){
+        for (Vehicle vehicle: Vehicle.getVehicles()){
             if (vehicle.Vid.equals(Vid)){
                 return vehicle;
             }
@@ -112,8 +155,9 @@ public class Vehicle {
         this.current_trip.getA_port().receive_vehicles(this);
     }
 
-    public void refuel(){
+    public boolean refuel(){
         this.carrying_capacity = this.fuel_capacity;
+        return true;
     }
 
     public boolean successAssessment(ArrayList<Container> container_list, double trip_length){
@@ -183,20 +227,27 @@ class ship extends Vehicle{
     public ship(String Vid, String name, double fuel_capacity, double carrying_capacity){
         super(Vid, name, fuel_capacity,carrying_capacity);
     }
+
 }
 
-class basic_truck extends Vehicle{
+class truck extends Vehicle{
+    public truck(String Vid, String name, double fuel_capacity, double carrying_capacity){
+        super(Vid, name, fuel_capacity,carrying_capacity);
+    }
+}
+
+class basic_truck extends truck{
     public basic_truck(String Vid, String name, double fuel_capacity, double carrying_capacity){
         super(Vid, name, fuel_capacity,carrying_capacity);
     }
 }
 
-class tanker_truck extends Vehicle{
+class tanker_truck extends truck{
     public tanker_truck(String Vid, String name, double fuel_capacity, double carrying_capacity){
         super(Vid, name, fuel_capacity,carrying_capacity);
     }
 }
-class reefer_truck extends Vehicle{
+class reefer_truck extends truck{
     public reefer_truck(String Vid, String name, double fuel_capacity, double carrying_capacity){
         super(Vid, name, fuel_capacity,carrying_capacity);
     }
