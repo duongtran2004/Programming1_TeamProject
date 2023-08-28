@@ -110,6 +110,7 @@ public class Trip implements Serializable{
         }
         return deployable_vehicles;
     }
+
     public static void inputTripIntoFile(File file, Trip trip){
         if (file.length() == 0 ){
             try{
@@ -123,7 +124,6 @@ public class Trip implements Serializable{
             }
         }
         else {
-            System.out.println("append");
             try{
                 AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("trip.txt", true));
                 oos.writeObject(trip);
