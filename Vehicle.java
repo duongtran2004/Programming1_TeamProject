@@ -76,7 +76,6 @@ public class Vehicle implements Serializable {
             }
         }
         else {
-            System.out.println("append");
             try{
                 AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("vehicle.txt", true));
                 oos.writeObject(vehicle);
@@ -137,26 +136,105 @@ public class Vehicle implements Serializable {
     }
 
     public void accept_container(Container container){
-        container_list.add(container);
+        this.container_list.add(container);
+        ArrayList<Vehicle> vehicle_list = getVehicles();
+        File file = new File("vehicle.txt");
+        for (int i =0; i<vehicle_list.size(); i++){
+            if (vehicle_list.get(i) == this){
+                vehicle_list.set(i, this);
+            }
+        }
+        file.delete();
+        try{
+            file.createNewFile();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     public void unload_container(Container container){
-        container_list.remove(container);
+        this.container_list.remove(container);
+        ArrayList<Vehicle> vehicle_list = getVehicles();
+        File file = new File("vehicle.txt");
+        for (int i =0; i<vehicle_list.size(); i++){
+            if (vehicle_list.get(i) == this){
+                vehicle_list.set(i, this);
+            }
+        }
+        file.delete();
+        try{
+            file.createNewFile();
+            for (Vehicle vehicle: vehicle_list){
+                Vehicle.inputVehicleIntoFile(file, vehicle);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
-    public void depart(){
-        this.current_trip.getD_port().sendoff_vehicles(this);
+    public void depart(Trip trip){
         this.current_port = null;
+        this.current_trip = trip;
+        ArrayList<Vehicle> vehicle_list = getVehicles();
+        File file = new File("vehicle.txt");
+        for (int i =0; i<vehicle_list.size(); i++){
+            if (vehicle_list.get(i) == this){
+                vehicle_list.set(i, this);
+            }
+        }
+        file.delete();
+        try{
+            file.createNewFile();
+            for (Vehicle vehicle: vehicle_list){
+                Vehicle.inputVehicleIntoFile(file, vehicle);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
 
     }
 
     public void arrive(Port current_port){
         this.current_port = this.current_trip.getA_port();
-        this.current_trip.getA_port().receive_vehicles(this);
+        this.current_trip = null;
+        ArrayList<Vehicle> vehicle_list = getVehicles();
+        File file = new File("vehicle.txt");
+        for (int i =0; i<vehicle_list.size(); i++){
+            if (vehicle_list.get(i) == this){
+                vehicle_list.set(i, this);
+            }
+        }
+        file.delete();
+        try{
+            file.createNewFile();
+            for (Vehicle vehicle: vehicle_list){
+                Vehicle.inputVehicleIntoFile(file, vehicle);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     public boolean refuel(){
-        this.carrying_capacity = this.fuel_capacity;
+        this.current_fuel = this.fuel_capacity;
+        ArrayList<Vehicle> vehicle_list = getVehicles();
+        File file = new File("vehicle.txt");
+        for (int i =0; i<vehicle_list.size(); i++){
+            if (vehicle_list.get(i) == this){
+                vehicle_list.set(i, this);
+            }
+        }
+        file.delete();
+        try{
+            file.createNewFile();
+            for (Vehicle vehicle: vehicle_list){
+                Vehicle.inputVehicleIntoFile(file, vehicle);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -165,11 +243,9 @@ public class Vehicle implements Serializable {
         double container_weight = 0;
 
         for (Container container: container_list){
-            System.out.println(container.getName());
             container_weight = container_weight + container.getWeight();
             if (Vid.startsWith("SH")){
                 if (container.getCid().startsWith("DS")){
-                    System.out.println("true");
                     fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
                 else if (container.getCid().startsWith("OT")){
