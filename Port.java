@@ -1,7 +1,9 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
-public class Port {
+
+public class Port implements Serializable {
     private String Pid;
     private String latitude;
     private String longtitude;
@@ -11,10 +13,28 @@ public class Port {
     private ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
     private ArrayList<Container> containers = new ArrayList<Container>();
 
-    private static ArrayList<Port> ports = new ArrayList<Port>();
-
     public static ArrayList<Port> getPorts(){
-        return ports;
+        ArrayList<Port> port_list = new ArrayList<Port>();
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("port.txt"));
+            while (true){
+                try{
+                    Port port = (Port) ois.readObject();
+                    port_list.add(port);
+                } catch (EOFException e){
+                    break;
+                }
+                catch (ClassNotFoundException e){
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return port_list;
     }
 
     public Port(String Pid, String latitude, String longtitude, String name, double storing_capacity, boolean landing_ability){
@@ -62,11 +82,37 @@ public class Port {
         for (int i = 1; i<=10; i++){
             Pid = Pid + random.nextInt(10);
         }
-        ports.add(new Port(Pid, latitude, longtitude, name, storing_capacity, landing_ability));
+        File file = new File("port.txt");
+        if (file.length() == 0){
+            try{
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("port.txt"));
+                oos.writeObject(new Port(Pid, latitude, longtitude, name, storing_capacity, landing_ability));
+                oos.close();
+            } catch (FileNotFoundException e){
+                e.printStackTrace();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            try{
+                AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("port.txt", true));
+                oos.writeObject(new Port(Pid, latitude, longtitude, name, storing_capacity, landing_ability));
+                oos.close();
+            } catch (FileNotFoundException e){
+                e.printStackTrace();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+
+
+
     }
 
     public static Port queryPortbyID(String Pid){
-        for (Port port: ports){
+        for (Port port: getPorts()){
             if (port.Pid.equals(Pid)){
                 return port;
             }
