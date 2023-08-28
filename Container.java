@@ -82,19 +82,19 @@ public class Container implements Serializable {
             inputContainerIntoFile(file, new_container);
         }
         if (selection == 2){
-            Container new_container = new Container("DS" + Cid, name, weight);
+            Container new_container = new Container("OS" + Cid, name, weight);
             new_container.fuel_consumption_per_km_on_ship = 2.7;
             new_container.fuel_consumption_per_km_on_truck = 3.2;
             inputContainerIntoFile(file, new_container);
         }
         if (selection == 3){
-            Container new_container = new Container("DS" + Cid, name, weight);
+            Container new_container = new Container("RE" + Cid, name, weight);
             new_container.fuel_consumption_per_km_on_ship = 4.5;
             new_container.fuel_consumption_per_km_on_truck = 5.4;
             inputContainerIntoFile(file, new_container);
         }
         if (selection == 4){
-            Container new_container = new Container("DS" + Cid, name, weight);
+            Container new_container = new Container("LI" + Cid, name, weight);
             new_container.fuel_consumption_per_km_on_ship = 4.8;
             new_container.fuel_consumption_per_km_on_truck = 5.3;
             inputContainerIntoFile(file, new_container);
