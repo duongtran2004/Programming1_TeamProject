@@ -165,42 +165,44 @@ public class Vehicle implements Serializable {
         double container_weight = 0;
 
         for (Container container: container_list){
+            System.out.println(container.getName());
             container_weight = container_weight + container.getWeight();
-            if (this.Vid.startsWith("SH")){
-                if (container.getName().startsWith("DS")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Dry_Storage)container).getFuel_consumption_per_km_on_ship();
+            if (Vid.startsWith("SH")){
+                if (container.getCid().startsWith("DS")){
+                    System.out.println("true");
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
-                else if (container.getName().startsWith("OT")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Open_Top)container).getFuel_consumption_per_km_on_ship();
+                else if (container.getCid().startsWith("OT")){
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
 
-                else if (container.getName().startsWith("OS")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Open_Side)container).getFuel_consumption_per_km_on_ship();
+                else if (container.getCid().startsWith("OS")){
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
-                else if (container.getName().startsWith("RE")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Refridgerated)container).getFuel_consumption_per_km_on_ship();
+                else if (container.getCid().startsWith("RE")){
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
                 else {
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Liquid)container).getFuel_consumption_per_km_on_ship();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
 
             }
             else {
-                if (container.getName().startsWith("DS")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Dry_Storage)container).getFuel_consumption_per_km_on_truck();
+                if (container.getCid().startsWith("DS")){
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
-                else if (container.getName().startsWith("OT")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Open_Top)container).getFuel_consumption_per_km_on_truck();
+                else if (container.getCid().startsWith("OT")){
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
 
-                else if (container.getName().startsWith("OS")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Open_Side)container).getFuel_consumption_per_km_on_truck();
+                else if (container.getCid().startsWith("OS")){
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
-                else if (container.getName().startsWith("RE")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Refridgerated)container).getFuel_consumption_per_km_on_truck();
+                else if (container.getCid().startsWith("RE")){
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
                 else {
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Liquid)container).getFuel_consumption_per_km_on_truck();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
             }
         }
