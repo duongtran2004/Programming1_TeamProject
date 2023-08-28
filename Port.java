@@ -65,6 +65,54 @@ public class Port implements Serializable {
     public String toString(){
         return "Port id: " + this.Pid + "\n" + "Port name: "+ this.name + "\n" + "Port latitude: " + this.latitude + "\n" + "Port longtitude: " + this.longtitude + "\n" + "Storing capacity: "+ this.storing_capacity + "\n" + "Landing ability: " + this.landing_ability;}
 
+    public static ArrayList<Port> getPort(){
+        ArrayList<Port> port_list = new ArrayList<Port>();
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("port.txt"));
+            while (true){
+                try {
+                    Port port = (Port) ois.readObject();
+                    port_list.add(port);
+                } catch (EOFException e){
+                    break;
+                } catch (ClassNotFoundException e){
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return port_list;
+    }
+
+    public static void inputPortIntoFile(File file, Port port){
+        if (file.length() == 0){
+            try{
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("port.txt"));
+                oos.writeObject(port);
+                oos.close();
+            } catch (FileNotFoundException e){
+                e.printStackTrace();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            try{
+                AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("port.txt", true));
+                oos.writeObject(port);
+                oos.close();
+            } catch (FileNotFoundException e){
+                e.printStackTrace();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void createNewPort(){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please input the name of the new port: ");
@@ -83,31 +131,8 @@ public class Port implements Serializable {
             Pid = Pid + random.nextInt(10);
         }
         File file = new File("port.txt");
-        if (file.length() == 0){
-            try{
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("port.txt"));
-                oos.writeObject(new Port(Pid, latitude, longtitude, name, storing_capacity, landing_ability));
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        else {
-            try{
-                AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("port.txt", true));
-                oos.writeObject(new Port(Pid, latitude, longtitude, name, storing_capacity, landing_ability));
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-
-
-
+        Port new_port = new Port(Pid, latitude, longtitude, name, storing_capacity, landing_ability);
+        inputPortIntoFile(file, new_port);
 
     }
 
@@ -124,19 +149,87 @@ public class Port implements Serializable {
 
     public void receive_vehicles(Vehicle vehicle){
         vehicles.add(vehicle);
+        ArrayList<Port> port_list = getPort();
+        File file = new File("port.txt");
+        for (int i =0; i<port_list.size(); i++){
+            if (port_list.get(i) == this){
+                port_list.set(i, this);
+            }
+        }
+        file.delete();
+        try{
+            file.createNewFile();
+            for (Port port: port_list){
+                inputPortIntoFile(file, port);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
     public void sendoff_vehicles(Vehicle vehicle){
         vehicles.remove(vehicle);
+        ArrayList<Port> port_list = getPort();
+        File file = new File("port.txt");
+        for (int i =0; i<port_list.size(); i++){
+            if (port_list.get(i) == this){
+                port_list.set(i, this);
+            }
+        }
+        file.delete();
+        try{
+            file.createNewFile();
+            for (Port port: port_list){
+                inputPortIntoFile(file, port);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+
+
+
+
     }
 
-    public void load_containers_off_vehicle(Container container, Vehicle vehicle){
+    public void load_containers_off_vehicle(Container container){
         containers.add(container);
-        vehicle.unload_container(container);
+        ArrayList<Port> port_list = getPort();
+        File file = new File("port.txt");
+        for (int i =0; i<port_list.size(); i++){
+            if (port_list.get(i) == this){
+                port_list.set(i, this);
+            }
+        }
+        file.delete();
+        try{
+            file.createNewFile();
+            for (Port port: port_list){
+                inputPortIntoFile(file, port);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
-    public void load_containers_on_vehicle(Container container, Vehicle vehicle){
+    public void load_containers_on_vehicle(Container container){
         containers.remove(container);
-        vehicle.accept_container(container);
+        ArrayList<Port> port_list = getPort();
+        File file = new File("port.txt");
+        for (int i =0; i<port_list.size(); i++){
+            if (port_list.get(i) == this){
+                port_list.set(i, this);
+            }
+        }
+        file.delete();
+        try{
+            file.createNewFile();
+            for (Port port: port_list){
+                inputPortIntoFile(file, port);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     public double distanceCalc(Port targetPort){
