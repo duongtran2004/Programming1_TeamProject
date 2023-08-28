@@ -160,7 +160,7 @@ public class Vehicle implements Serializable {
         return true;
     }
 
-    public boolean successAssessment(ArrayList<Container> container_list, double trip_length){
+   public boolean successAssessment(ArrayList<Container> container_list, double trip_length){
         double fuel_consumption_per_km = 0;
         double container_weight = 0;
 
@@ -168,43 +168,42 @@ public class Vehicle implements Serializable {
             container_weight = container_weight + container.getWeight();
             if (this.Vid.startsWith("SH")){
                 if (container.getName().startsWith("DS")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Dry_Storage)container).getFuel_consumption_per_km_on_ship();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
                 else if (container.getName().startsWith("OT")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Open_Top)container).getFuel_consumption_per_km_on_ship();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
 
                 else if (container.getName().startsWith("OS")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Open_Side)container).getFuel_consumption_per_km_on_ship();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
                 else if (container.getName().startsWith("RE")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Refridgerated)container).getFuel_consumption_per_km_on_ship();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
                 else {
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Liquid)container).getFuel_consumption_per_km_on_ship();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
 
             }
             else {
                 if (container.getName().startsWith("DS")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Dry_Storage)container).getFuel_consumption_per_km_on_truck();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
                 else if (container.getName().startsWith("OT")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Open_Top)container).getFuel_consumption_per_km_on_truck();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
 
                 else if (container.getName().startsWith("OS")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Open_Side)container).getFuel_consumption_per_km_on_truck();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
                 else if (container.getName().startsWith("RE")){
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Refridgerated)container).getFuel_consumption_per_km_on_truck();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
                 else {
-                    fuel_consumption_per_km = fuel_consumption_per_km + ((Liquid)container).getFuel_consumption_per_km_on_truck();
+                    fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_truck();
                 }
             }
         }
-
         double total_fuel_consumption = trip_length * fuel_consumption_per_km;
 
         if (this.fuel_capacity < total_fuel_consumption || this.carrying_capacity < container_weight){
