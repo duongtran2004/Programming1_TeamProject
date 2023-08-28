@@ -1,9 +1,10 @@
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
-public class Trip {
+public class Trip implements Serializable{
     private Vehicle vehicle;
     private String Tid;
     private String status = "Incomplete";
@@ -53,9 +54,34 @@ public class Trip {
         return date_of_arrival;
     }
 
+
+
+
     public static ArrayList<Trip> getTrip_list(){
-        return trip_list;
+        ArrayList<Trip> list_trip = new ArrayList<Trip>();
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("trip.txt"));
+            while (true){
+                try{
+                    Trip trip = (Trip) ois.readObject();
+                    list_trip.add(trip);
+                } catch (EOFException e){
+                    break;
+                }
+                catch (ClassNotFoundException e){
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return list_trip;
     }
+
+
 
     public static ArrayList<Vehicle> checking_vehicle_eligibility(Port port, Port port_of_arrival, Date date_of_arrival, Date date_of_departure, ArrayList<Container>container_list){
         //this method returns a list of vehicle available to be deployed on the trip. Vehicle eligibility is evaluated based on the arrival base's landing ability (False means only accessible to ships) whether a vehicle is capable of finishing a trip given a list of containers and trip length (by calling the successAssement method from the Vehicle Class), whether it is on another trip on the given trip duration.
@@ -64,7 +90,7 @@ public class Trip {
         ArrayList<Vehicle> unavailable_vehicles = new ArrayList<Vehicle>();
         double trip_length = port.distanceCalc(port_of_arrival);
 
-        for (Trip trip: Trip.trip_list){
+        for (Trip trip: getTrip_list()){
             if ((trip.date_of_arrival.after(date_of_departure) && trip.date_of_arrival.before(date_of_arrival)) || ((trip.date_of_departure.after(date_of_departure) && trip.date_of_departure.before(date_of_arrival)))){
                 unavailable_vehicles.add(trip.vehicle);
             }
@@ -83,6 +109,31 @@ public class Trip {
 
         }
         return deployable_vehicles;
+    }
+    public static void inputTripIntoFile(File file, Trip trip){
+        if (file.length() == 0 ){
+            try{
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("trip.txt"));
+                oos.writeObject(trip);
+                oos.close();
+            } catch (FileNotFoundException e){
+                e.printStackTrace();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            System.out.println("append");
+            try{
+                AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("trip.txt", true));
+                oos.writeObject(trip);
+                oos.close();
+            } catch (FileNotFoundException e){
+                e.printStackTrace();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     //this method will register a trip into the system. It prompts the user to input date and port of departure and arrival, it will then have them choose from a list of available vehicles returned by the checking_vehicle_eligibility function. The id of the trip will be randomly generated
@@ -146,15 +197,16 @@ public class Trip {
         for (int i =1; i<=5; i++){
             Tid = Tid + generating_id.nextInt(10);
         }
+        File file = new File("trip.txt");
         Trip new_trip = new Trip(selected_vehicle, Tid, port, port_of_arrival, date_of_departure, date_of_arrival);
-        trip_list.add(new_trip);
+        inputTripIntoFile(file, new_trip );
     }
 
     public static Trip queryByName(){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter the Id of the trip");
         String Cid = scanner.nextLine();
-        for (Trip trip: trip_list){
+        for (Trip trip: getTrip_list()){
             if (trip.getTid().equals(Cid)){
                 return trip;
             }
@@ -164,6 +216,9 @@ public class Trip {
     //This method allows Port Manager to view the outgoing trips after/before inputted dates
     public static void outgoingTrip_query(Port port){
         //Have the users input the interval they would like to query
+        ArrayList<Trip> trip_from_port = new ArrayList<Trip>();
+        ArrayList<Trip> trip_list = getTrip_list();
+
         Date after = null;
         Date before = null;
         Scanner scanner = new Scanner(System.in);
@@ -188,13 +243,10 @@ public class Trip {
             int date = scanner.nextInt();
             before = new Date(year,month,date);
         }
-
-        ArrayList<Trip> trip_from_port = new ArrayList<Trip>();
-
         //querying
         //if the user does not enter both before and after filtering dates, the function will return all outgoing trips
         if (after == null && before == null){
-            for (Trip trip: Trip.trip_list){
+            for (Trip trip: trip_list){
                 if (trip.D_port == port){
                     trip_from_port.add(trip);
                 }
@@ -203,7 +255,7 @@ public class Trip {
 
         //if the user only enter the after filtering date, the function will return all the outgoing trip after that date
         else if (before == null && !(after==null)){
-            for (Trip trip: Trip.trip_list){
+            for (Trip trip: trip_list){
                 if (trip.date_of_departure.after(after) && trip.D_port == port){
                     trip_from_port.add(trip);
                 }
@@ -212,14 +264,14 @@ public class Trip {
 
         //if the user only enter the after filtering date, the function will return all the outgoing trip before that date
         else if (after == null && !(before == null)){
-            for (Trip trip: Trip.trip_list){
+            for (Trip trip: trip_list){
                 if (trip.date_of_departure.before(before) && trip.D_port == port){
                     trip_from_port.add(trip);
                 }
             }
         }
         else {
-            for (Trip trip: Trip.trip_list){
+            for (Trip trip: trip_list){
                 if (trip.date_of_departure.before(before) && trip.date_of_departure.after(after) && trip.D_port == port){
                     trip_from_port.add(trip);
                 }
@@ -232,6 +284,9 @@ public class Trip {
     //This method allows Port Manager to see the incoming trip after/before inputted dates.
     public static void incomingTrip_query(Port port){
         //Have the users input the interval they would like to query
+        ArrayList<Trip> trip_from_port = new ArrayList<Trip>();
+        ArrayList<Trip> trip_list = getTrip_list();
+
         Date after = null;
         Date before = null;
         Scanner scanner = new Scanner(System.in);
@@ -256,12 +311,10 @@ public class Trip {
             before = new Date(year,month,date);
         }
 
-        ArrayList<Trip> trip_from_port = new ArrayList<Trip>();
-
         //querying
         //if the user does not enter both before and after filtering dates, the function will return all incoming trips
         if (after == null && before == null){
-            for (Trip trip: Trip.getTrip_list()){
+            for (Trip trip: trip_list){
                 if (trip.getA_port() == port){
                     trip_from_port.add(trip);
                 }
@@ -269,7 +322,7 @@ public class Trip {
         }
         //if the user only enter the after filtering date, the function will return all the outgoing trip after that date
         else if (before == null && !(after==null)){
-            for (Trip trip: Trip.getTrip_list()){
+            for (Trip trip: trip_list){
                 if (trip.getDate_of_arrival().after(after) && trip.getA_port() == port){
                     trip_from_port.add(trip);
                 }
@@ -278,14 +331,14 @@ public class Trip {
 
         //if the user only enter the after filtering date, the function will return all the outgoing trip before that date
         else if (after == null && !(before == null)){
-            for (Trip trip: Trip.getTrip_list()){
+            for (Trip trip: trip_list){
                 if (trip.getDate_of_arrival().before(before) && trip.getA_port() == port){
                     trip_from_port.add(trip);
                 }
             }
         }
         else{
-            for (Trip trip: Trip.trip_list){
+            for (Trip trip: trip_list){
                 if (trip.date_of_arrival.before(before) && trip.date_of_arrival.after(after) && trip.D_port == port){
                     trip_from_port.add(trip);
                 }
