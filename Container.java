@@ -105,17 +105,20 @@ public class Container implements Serializable {
     public String getName(){
         return this.name;
     }
+    public String getCid(){
+        return this.Cid;
+    }
 
     public double getWeight(){
         return this.weight;
     }
 
     public double getFuel_consumption_per_km_on_ship(){
-        return this.getFuel_consumption_per_km_on_ship();
+        return this.fuel_consumption_per_km_on_ship;
     }
 
     public double getFuel_consumption_per_km_on_truck(){
-        return this.getFuel_consumption_per_km_on_truck();
+        return this.fuel_consumption_per_km_on_truck;
     }
 
     public static ArrayList<Container> getContainer(){
@@ -150,19 +153,4 @@ public class Container implements Serializable {
         System.out.println("Container does not exist");
         return null;
     }
-
-
-
-
-
 }
-
-class Dry_Storage extends Container{
-    double fuel_consumption_per_km_on_ship = 3.5;
-    double fuel_consumption_per_km_on_truck = 4.6;
-
-    public Dry_Storage(String Cid, String name, double weight){
-        super(Cid, name, weight);
-    }
-}
-
