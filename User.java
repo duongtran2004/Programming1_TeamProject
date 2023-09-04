@@ -84,24 +84,14 @@ class Port_Manager extends User{
         this.port = port;
     }
 
-    public static void addPortManager() throws IOException {
+    public static void addPortManager(String username, String password, Port port) throws IOException {
         Scanner scanner = new Scanner(System.in);
         String Eid = "";
         Random random = new Random();
         for (int i = 1; i<=10; i++){
             Eid = Eid + random.nextInt(10);
         }
-        System.out.println("Please enter the username");
-        String username = scanner.nextLine();
-        System.out.println("Please enter the password");
-        String password = scanner.nextLine();
-        String prompt = "Please assign the new manager to a port: ";
-        for (int i = 0; i < FileIOUtil.ReadPortFromFile().size(); i++){
-            prompt = prompt + i +": "+ (FileIOUtil.ReadPortFromFile().get(i)).getName() + " ";
-        }
-        System.out.println(prompt);
-        int selection = scanner.nextInt();
-        User new_user = new Port_Manager(Eid, username, password, "Port Manager", (FileIOUtil.ReadPortFromFile().get(selection)));
+        User new_user = new Port_Manager(Eid, username, password, "Port Manager", port);
         FileIOUtil.InputObjectIntoFile(new_user, "port_manager.json");
     }
 
@@ -322,8 +312,14 @@ class Port_Manager extends User{
         System.out.println("Please input the id of the trip");
         String Tid = scanner.nextLine();
         Trip trip = Trip.queryByName(Tid);
-        this.port.checkout_vehicles(trip.getVehicle());
+        Port main_port = Port.queryPortbyID(this.port.getPid());
+        main_port.checkout_vehicles(trip.getVehicle());
         trip.getVehicle().depart(trip);
+        for (Container container: trip.getTo_be_delivered_containers()){
+            main_port.checkout_containers(container);
+            container.enterPort(main_port);
+        }
+
     }
     //this method is called after a vehicle reaches its destination port and finishes its trip. It will check the vehicle into the port
     public void completeTrip() throws IOException {
@@ -332,8 +328,14 @@ class Port_Manager extends User{
         String Tid = scanner.nextLine();
         Trip trip = Trip.queryByName(Tid);
         trip.completeTrip();
-        this.port.accept_vehicles(trip.getVehicle());
-        trip.getVehicle().arrive(this.port);
+        Port main_port = Port.queryPortbyID(this.port.getPid());
+        main_port.accept_vehicles(trip.getVehicle());
+        trip.getVehicle().arrive(main_port);
+
+        for (Container container: trip.getTo_be_delivered_containers()){
+            main_port.accept_containers(container);
+            container.leavePort();
+        }
     }
     //this method is called when the port manager wants to load containers off a vehicle
     public void loadingContainersonVehicle() throws IOException {
@@ -384,12 +386,51 @@ class System_Admin extends  User{
     //-----------------------------------------------CREATE METHODS----------------------------------------------------//
 
     public static void addManager() throws IOException {
-        Port_Manager.addPortManager();
+        String username;
+        String password;
+        Port port = new Port();
+        Scanner scanner = new Scanner(System.in);
+        while (true){
+            System.out.println("Please input your username here: ");
+            username = scanner.nextLine();
+            System.out.println("Username: " + username + "." + "Would you like to input again? (Y/N)");
+            String rep = scanner.nextLine();
+            if (rep.equals("N")){
+                break;
+            }
+        }
+        while (true){
+            System.out.println("Please input your password here: ");
+            password = scanner.nextLine();
+            System.out.println("Password: " + password + "." + "Would you like to input again? (Y/N)");
+            String rep = scanner.nextLine();
+            if (rep.equals("N")){
+                break;
+            }
+        }
+        while (true){
+            String prompt = "Please assign the new manager to a port: ";
+            for (int i = 0; i < FileIOUtil.ReadPortFromFile().size(); i++){
+                prompt = prompt + i +": "+ (FileIOUtil.ReadPortFromFile().get(i)).getName() + " ";
+            }
+            System.out.println(prompt);
+            int selection = scanner.nextInt();
+            scanner.nextLine();
+            port = FileIOUtil.ReadPortFromFile().get(selection);
+            System.out.println("Please check port detail:\n" + password + "\n" + "Would you like to choose another port? (Y/N)");
+            String rep = scanner.nextLine();
+            if (rep.equals("N")){
+                break;
+            }
+
+        }
+
+        Port_Manager.addPortManager(username, password, port);
     }
     public static Port addPort() throws IOException {
         String name = "";
-        String latitude = "";
-        String longtitude = "";
+        double latitude = 0;
+        double longtitude = 0;
         double storing_capacity = 0;
         boolean landing_ability = false;
         Scanner scanner = new Scanner(System.in);
@@ -403,23 +444,80 @@ class System_Admin extends  User{
             }
         }
         while (true){
-            System.out.println("Please input the port latitude");
-            latitude = scanner.nextLine();
-            System.out.println("Port latitude: " + latitude + ". " + "Would you like to enter again? (Y-N)" );
+            String hemisphere = "";
+            double degree = 0;
+            double minute = 0;
+            double second = 0;
+            while (true){
+                System.out.println("Please input the port latitude (N or S)");
+                System.out.println("Please Choose Hemisphere");
+                hemisphere = scanner.nextLine();
+                System.out.println("Please input degree (maximum 180)");
+                degree = scanner.nextDouble();
+                System.out.println("Please input minute");
+                minute = scanner.nextDouble();
+                System.out.println("Please input second");
+                second = scanner.nextDouble();
+                scanner.nextLine();
+                double total_degree = (double) Math.round((degree + minute/60 + second/3600)*100)/100;
+                if (total_degree <= 180){
+                    if (hemisphere.equals("N")){
+                        latitude = total_degree;
+                    }
+                    else {
+                        latitude = -total_degree;
+                    }
+                    break;
+                }
+                else {
+                    System.out.println("Incorrect latitude. Please enter again");
+                }
+            }
+
+            System.out.println("Port latitude: " + degree + " degree " + minute + " minutes " + second + " seconds " + hemisphere + ". " +"Would you like to enter again? (Y-N)" );
             String response = scanner.nextLine();
             if (response.equals("N")){
                 break;
             }
         }
         while (true){
-            System.out.println("Please input the port longtitude");
-            longtitude = scanner.nextLine();
-            System.out.println("Port longtitude: " + longtitude + ". " + "Would you like to enter again? (Y-N)" );
+            String hemisphere = "";
+            double degree = 0;
+            double minute = 0;
+            double second = 0;
+            while (true){
+                System.out.println("Please input the port longtitude");
+                System.out.println("Please Choose Hemisphere (W or E)");
+                hemisphere = scanner.nextLine();
+                System.out.println("Please input degree (maximum 180)");
+                degree = scanner.nextDouble();
+                System.out.println("Please input minute");
+                minute = scanner.nextDouble();
+                System.out.println("Please input second");
+                second = scanner.nextDouble();
+                scanner.nextLine();
+                double total_degree = (double) Math.round((degree + minute/60 + second/3600)*100)/100;
+                if (total_degree <= 180){
+                    if (hemisphere.equals("E")){
+                        longtitude = total_degree;
+                    }
+                    else {
+                        longtitude = -total_degree;
+                    }
+                    break;
+                }
+                else {
+                    System.out.println("Incorrect latitude. Please enter again");
+                }
+            }
+
+            System.out.println("Port longtitude: " + degree + " degree " + minute + " minutes " + second + " seconds" + hemisphere + ". " +"Would you like to enter again? (Y-N)" );
             String response = scanner.nextLine();
             if (response.equals("N")){
                 break;
             }
         }
+
         while (true){
             System.out.println("PLease input its storing capacity");
             storing_capacity = scanner.nextDouble();
