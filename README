@@ -8,3 +8,5 @@ Tasks for this week:
     Have users re-enter if the input is found in incorrect format. Ensure that latitude and longtitude is in correct format by using Regular Expression. When users are given options, often in the form of numbers, ensure that users only enter the given numbers. Handle Input Type Mismatch exception(e.g users entering number when boolean value is expected)
     When users are asked a Yes No question, only accept values such as (Yes, yes, YES, no, No, NO y, Y, n, N)
     Given users the option to return to the previous step. (Hint: use Recursion)
+
+-The program might not run properly on your computer. In that case, see how to apply the 3 attached jar file 
