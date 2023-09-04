@@ -113,26 +113,26 @@ public class Trip implements Serializable{
         ArrayList<Vehicle> deployable_vehicles = new ArrayList<Vehicle>();
         ArrayList<Vehicle> unavailable_vehicles = new ArrayList<Vehicle>();
         ArrayList<Vehicle> vehicles = FileIOUtil.ReadVehicleFromFile();
-
-        double trip_length = port.distanceCalc(port_of_arrival);
         File file = new File("trip.json");
         if (file.length() == 0){
+            System.out.println("true");
             if (port_of_arrival.isLandingAbility()){
                 for (Vehicle vehicle: vehicles){
-                    if (vehicle.getCurrent_port().equals(port)){
+                    if (vehicle.getCurrent_port().equals(port) && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival))){
                         deployable_vehicles.add(vehicle);
                     }
                 }
             }
             else {
                 for (Vehicle vehicle: vehicles){
-                    if (vehicle.getCurrent_port().equals(port) && vehicle.getVid().startsWith("SH")){
+                    if (vehicle.getCurrent_port().equals(port) && vehicle.getVid().startsWith("SH") && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival))){
                         deployable_vehicles.add(vehicle);
                     }
                 }
             }
         }
         else {
+            System.out.println("false");
             for (Trip trip: FileIOUtil.ReadTripFromFile()){
                 if (trip.getD_port().equals(port)){
                     if ((!date_of_departure.after(trip.date_of_arrival) && !date_of_departure.before(trip.date_of_departure)) || ((!date_of_arrival.after(trip.date_of_arrival) && !date_of_arrival.before(trip.date_of_departure)))){
@@ -143,12 +143,12 @@ public class Trip implements Serializable{
 
             for (Vehicle vehicle: vehicles){
                 if (port_of_arrival.isLandingAbility()){
-                    if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, trip_length) && vehicle.getCurrent_port().equals(port)){
+                    if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival)) && vehicle.getCurrent_port().equals(port)){
                         deployable_vehicles.add(vehicle);
                     }
                 }
                 else {
-                    if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, trip_length) && vehicle.getName().startsWith("SH") && vehicle.getCurrent_port().equals(port)){
+                    if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival)) && vehicle.getName().startsWith("SH") && vehicle.getCurrent_port().equals(port)){
                         deployable_vehicles.add(vehicle);
                     }
                 }
