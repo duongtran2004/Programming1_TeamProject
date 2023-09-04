@@ -1,0 +1,10 @@
+Tasks for this week:
+
+-Finish Read Methods in User class (Instructions could be found in the Read Methods section in the User Class)
+
+-Finish Update Methods in User class (Instruction could be found in the Update Methods section in the User Class)
+
+-Implement User Input Control. Most User Inputs could be found in the User class. Instruction:
+    Have users re-enter if the input is found in incorrect format. Ensure that latitude and longtitude is in correct format by using Regular Expression. When users are given options, often in the form of numbers, ensure that users only enter the given numbers. Handle Input Type Mismatch exception(e.g users entering number when boolean value is expected)
+    When users are asked a Yes No question, only accept values such as (Yes, yes, YES, no, No, NO y, Y, n, N)
+    Given users the option to return to the previous step. (Hint: use Recursion)
