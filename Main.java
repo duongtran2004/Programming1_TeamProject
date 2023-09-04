@@ -1,21 +1,32 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 
 public class Main {
-    public static void main(String[] args){
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("admin.txt"));
-            System_Admin admin = (System_Admin) ois.readObject();
-        }   catch (FileNotFoundException e){
-            e.printStackTrace();
-        }   catch (IOException e){
-            e.printStackTrace();
+    public static void main(String[] args) throws IOException {
+        System_Admin testing_admin = new System_Admin("1234567890", "Testing_Admin", "1234567890", "admin");
+        //System_Admin.addPort();
+        //System_Admin.addPort();
+        //System_Admin.addVehicle();
+        //System_Admin.addVehicle();
+        //System_Admin.addContainer();
+        //System_Admin.addManager();
+        Port_Manager manager = FileIOUtil.ReadManagerFromFile().get(0);
+        //manager.commenceTrip();
+        //manager.loadingContainersonVehicle();
+        //manager.completeTrip();
+        //manager.loadingContaineroffVehicle();
+        //manager.RegisteringTrip();
+        //System.out.println(FileIOUtil.ReadTripFromFile().get(0));
 
-        }   catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
+
+        //2679861123
+
+
+
+
 
     }
 }
