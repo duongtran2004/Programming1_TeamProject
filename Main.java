@@ -18,8 +18,12 @@ public class Main {
         //manager.loadingContainersonVehicle();
         //manager.completeTrip();
         //manager.loadingContaineroffVehicle();
-        //manager.RegisteringTrip();
+        manager.RegisteringTrip();
         //System.out.println(FileIOUtil.ReadTripFromFile().get(0));
+        //System_Admin.addPort();
+        //System_Admin.addPort();
+        //System.out.println(Port.queryPortbyID("0599540794").distanceCalc(Port.queryPortbyID("7186045282")));
+
 
 
         //2679861123
