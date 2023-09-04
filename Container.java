@@ -1,104 +1,92 @@
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.io.*;
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
+@JsonIdentityInfo(generator =ObjectIdGenerators.UUIDGenerator.class, property = "@cid", scope = Container.class)
 public class Container implements Serializable {
-    private String Cid;
+    private static final long serialVersionUID = 6529685098267757690L;
+    private String cid;
     private String name;
     private double weight;
+    //@JsonBackReference (value = "onsite_containers")
+    private  Port current_port;
+    //@JsonBackReference (value = "vehicles")
+    private Vehicle current_vehicle = null;
     private double fuel_consumption_per_km_on_ship;
     private double fuel_consumption_per_km_on_truck;
 
+    public Container(){
 
+    }
 
-    public Container(String Cid, String name, double weight){
-        this.Cid = Cid;
+    public Container(String Cid, String name, double weight, Port port){
+        this.cid = Cid;
         this.name = name;
         this.weight = weight;
+        this.current_port = port;
+    }
+
+
+    public boolean equals(Container container) {
+        if (container == this) {
+            System.out.println("true");
+            return true;
+        }
+
+        return this.cid.equals(container.cid) && this.name.equals(container.name);
+
+
     }
 
     public String toString(){
-        return "Container id: " + this.Cid + "\n" + "Container name: " + this.name + "\n" + "Weight: " + this.weight + "\n" + "Per Km Fuel Consumption on Ship " + this.fuel_consumption_per_km_on_ship + "\n" + "Per Km Fuel Consumption on Truck: " + this.fuel_consumption_per_km_on_truck + "\n";}
+        return "Container id: " + this.cid + "\n" + "Container name: " + this.name + "\n" + "Weight: " + this.weight + "\n" + "Per Km Fuel Consumption on Ship " + this.fuel_consumption_per_km_on_ship + "\n" + "Per Km Fuel Consumption on Truck: " + this.fuel_consumption_per_km_on_truck + "\n" + "\n";}
 
-    public static void inputContainerIntoFile(File file, Container container){
-        if (file.length() == 0 ){
-            try{
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("container.txt"));
-                oos.writeObject(container);
-                oos.close();
 
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        else {
-            try{
-                AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("container.txt", true));
-                oos.writeObject(container);
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
-    public static void createNewContainer(){
-        Scanner scanner = new Scanner(System.in);
-        int selection = 0;
-        System.out.println("Please enter container name");
-        String name = scanner.nextLine();
-        while (true){
-            System.out.println("Choose 0 for Dry Storage, 1 for Open Top, 2 for Open Side, 3 for Refridgerated, 4 for Liquid");
-            selection = scanner.nextInt();
-            if (selection >=0 && selection <= 4){
-                break;
-            }
-        }
-
-        System.out.println("Please enter container weight");
-        double weight = scanner.nextDouble();
-
+    public static Container createNewContainer(int type, String name, Port port, double weight) throws IOException {
         String Cid = "";
         Random random_id = new Random();
         for (int i =0; i<=10; i++){
             Cid = Cid + random_id.nextInt(10);
         }
-        File file = new File("container.txt");
+        File file = new File("container.json");
+        Container new_container = new Container();
+        System.out.println(type);
 
-        if (selection == 0){
-            Container new_container = new Container("DS" + Cid, name, weight);
+        if (type == 0){
+            new_container = new Container("DS" + Cid, name, weight, port);
             new_container.fuel_consumption_per_km_on_ship = 3.5;
             new_container.fuel_consumption_per_km_on_truck = 4.6;
-            inputContainerIntoFile(file, new_container);
+            FileIOUtil.InputObjectIntoFile(new_container, "container.json");
         }
-        if (selection == 1){
-            Container new_container = new Container("OT" + Cid, name, weight);
+        if (type == 1){
+            new_container = new Container("OT" + Cid, name, weight, port);
             new_container.fuel_consumption_per_km_on_ship = 2.8;
             new_container.fuel_consumption_per_km_on_truck = 3.2;
-            inputContainerIntoFile(file, new_container);
+            FileIOUtil.InputObjectIntoFile(new_container, "container.json");
         }
-        if (selection == 2){
-            Container new_container = new Container("OS" + Cid, name, weight);
+        if (type == 2){
+            new_container = new Container("OS" + Cid, name, weight, port );
             new_container.fuel_consumption_per_km_on_ship = 2.7;
             new_container.fuel_consumption_per_km_on_truck = 3.2;
-            inputContainerIntoFile(file, new_container);
+            FileIOUtil.InputObjectIntoFile(new_container, "container.json");
         }
-        if (selection == 3){
-            Container new_container = new Container("RE" + Cid, name, weight);
+        if (type == 3){
+            new_container = new Container("RE" + Cid, name, weight, port);
             new_container.fuel_consumption_per_km_on_ship = 4.5;
             new_container.fuel_consumption_per_km_on_truck = 5.4;
-            inputContainerIntoFile(file, new_container);
+            FileIOUtil.InputObjectIntoFile(new_container, "container.json");
         }
-        if (selection == 4){
-            Container new_container = new Container("LI" + Cid, name, weight);
+        if (type == 4){
+            new_container = new Container("LI" + Cid, name, weight, port);
             new_container.fuel_consumption_per_km_on_ship = 4.8;
             new_container.fuel_consumption_per_km_on_truck = 5.3;
-            inputContainerIntoFile(file, new_container);
+            FileIOUtil.InputObjectIntoFile(new_container, "container.json");
         }
+        return new_container;
 
     }
 
@@ -106,7 +94,14 @@ public class Container implements Serializable {
         return this.name;
     }
     public String getCid(){
-        return this.Cid;
+        return this.cid;
+    }
+
+    public Port getCurrent_port(){
+        return this.current_port;
+    }
+    public void setCurrent_vehicle(Vehicle vehicle){
+        this.current_vehicle = vehicle;
     }
 
     public double getWeight(){
@@ -121,36 +116,38 @@ public class Container implements Serializable {
         return this.fuel_consumption_per_km_on_truck;
     }
 
-    public static ArrayList<Container> getContainer(){
-        System.out.println("reading");
-        ArrayList<Container> container_list = new ArrayList<>();
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("container.txt"));
-            while (true){
-                try {
-                    Container container = (Container) ois.readObject();
-                    container_list.add(container);
-                } catch (EOFException e){
-                    break;
-                } catch (ClassNotFoundException e){
-                    e.printStackTrace();
-                }
-            }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        return container_list;
-    }
 
-    public static Container queryContainerbyID(String Cid){
-        for (Container container: getContainer() ){
-            if (container.Cid.equals(Cid)){
+
+    public static Container queryContainerbyID(String Cid) throws IOException {
+        for (Container container: FileIOUtil.ReadContainerFromFile() ){
+            if (container.cid.equals(Cid)){
                 return container;
             }
         }
         System.out.println("Container does not exist");
         return null;
     }
+
+    public void enterPort(Port port) throws IOException {
+        this.current_port = port;
+        FileIOUtil.updateObjectFromFile("container.json", this);
+
+    }
+
+    public void leavePort() throws IOException {
+        this.current_port = null;
+        FileIOUtil.updateObjectFromFile("container.json", this);
+    }
+
+
+    public void loadedonVehicle(Vehicle vehicle) throws IOException {
+        this.current_vehicle = vehicle;
+        FileIOUtil.updateObjectFromFile("container.json", this);
+    }
+
+    public void loadedoffVehicle() throws IOException {
+        this.current_vehicle = null;
+        FileIOUtil.updateObjectFromFile("container.json", this);
+    }
+
 }
