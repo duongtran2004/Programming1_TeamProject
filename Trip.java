@@ -1,51 +1,70 @@
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
+@JsonIdentityInfo(generator =ObjectIdGenerators.UUIDGenerator.class, property = "@tid", scope = Trip.class)
 public class Trip implements Serializable{
+    private static final long serialVersionUID = 6529685098267757690L;
     private Vehicle vehicle;
-    private String Tid;
+    private String tid;
     private String status = "Incomplete";
-    private Port D_port;
-    private Port A_port;
+    private Port d_port;
+    private Port a_port;
     private Date date_of_departure;
     private Date date_of_arrival;
-    private ArrayList<Container> containers_to_be_delivered = new ArrayList<Container>();
-    private static  ArrayList<Trip> trip_list = new ArrayList<Trip>();
+    private ArrayList<Container> to_be_delivered_containers = new ArrayList<Container>();
 
 
-    public Trip(Vehicle vehicle, String Tid, Port D_port, Port A_port, Date date_of_departure, Date date_of_arrival){
+    public Trip(){
+
+    }
+    public Trip(Vehicle vehicle, String Tid, Port D_port, Port A_port, Date date_of_departure, Date date_of_arrival, ArrayList<Container> containers){
         this.vehicle = vehicle;
-        this.Tid = Tid;
-        this.D_port = D_port;
-        this.A_port = A_port;
+        this.tid = Tid;
+        this.d_port = D_port;
+        this.a_port = A_port;
         this.date_of_arrival = date_of_arrival;
         this.date_of_departure = date_of_departure;
+        this.to_be_delivered_containers = containers;
     }
     public String toString(){
-        return "Trip id: " + this.Tid + "\n" + "Vehicle: " + this.vehicle + "\n" + "Status: " + this.status + "\n" + "Departure Port: " + this.D_port + "\n" + "Arrival Port: " + this.A_port + "\n" + "Date of Departure: " + this.date_of_departure + "\n"+ "Date of Arrival: " + this.date_of_arrival + "\n";}
+        return "Trip id: " + this.tid + "\n" + "Vehicle: " + this.vehicle.getVid() + "\n" + "Status: " + this.status + "\n" + "Departure Port: " + this.d_port.getName() + "\n" + "Arrival Port: " + this.a_port.getName() + "\n" + "Date of Departure: " + this.date_of_departure + "\n"+ "Date of Arrival: " + this.date_of_arrival + "\n" + "\n";}
+
+    public boolean equals(Trip trip) {
+        if (trip == this) {
+            System.out.println("true");
+            return true;
+        }
+        return this.tid.equals(trip.tid) && this.vehicle.equals(trip.vehicle);
+    }
+
+    //------------------------------------------Getter--------------------------------------//
 
     public String getTid(){
-        return this.Tid;
+        return this.tid;
     }
+
 
     public Vehicle getVehicle(){
         return  this.vehicle;
     }
-    public String getStatus(){
-        return  this.status;
+    public ArrayList<Container> getTo_be_delivered_containers(){
+        return this.to_be_delivered_containers;
     }
     public void setStatus(String status){
         this.status = status;
     }
 
     public Port getD_port(){
-        return this.D_port;
+        return this.d_port;
     }
     public Port getA_port(){
-        return this.A_port;
+        return this.a_port;
     }
     public Date getDate_of_departure(){
         return  date_of_departure;
@@ -54,200 +73,127 @@ public class Trip implements Serializable{
         return date_of_arrival;
     }
 
-
-
-
-    public static ArrayList<Trip> getTrip_list(){
-        ArrayList<Trip> list_trip = new ArrayList<Trip>();
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("trip.txt"));
-            while (true){
-                try{
-                    Trip trip = (Trip) ois.readObject();
-                    list_trip.add(trip);
-                } catch (EOFException e){
-                    break;
-                }
-                catch (ClassNotFoundException e){
-                    e.printStackTrace();
-                }
-
-            }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        return list_trip;
+    public String getStatus() {
+        return status;
     }
 
+    //---------------------------------------------------Setter----------------------------------------//
 
 
-    public static ArrayList<Vehicle> checking_vehicle_eligibility(Port port, Port port_of_arrival, Date date_of_arrival, Date date_of_departure, ArrayList<Container>container_list){
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public void setTid(String tid) {
+        this.tid = tid;
+    }
+
+    public void setD_port(Port d_port) {
+        this.d_port = d_port;
+    }
+
+    public void setA_port(Port a_port) {
+        this.a_port = a_port;
+    }
+
+    public void setDate_of_departure(Date date_of_departure) {
+        this.date_of_departure = date_of_departure;
+    }
+
+    public void setDate_of_arrival(Date date_of_arrival) {
+        this.date_of_arrival = date_of_arrival;
+    }
+
+    public void setTo_be_delivered_containers(ArrayList<Container> to_be_delivered_containers) {
+        this.to_be_delivered_containers = to_be_delivered_containers;
+    }
+
+    public static ArrayList<Vehicle> checking_vehicle_eligibility(Port port, Port port_of_arrival, Date date_of_arrival, Date date_of_departure, ArrayList<Container>container_list) throws IOException {
         //this method returns a list of vehicle available to be deployed on the trip. Vehicle eligibility is evaluated based on the arrival base's landing ability (False means only accessible to ships) whether a vehicle is capable of finishing a trip given a list of containers and trip length (by calling the successAssement method from the Vehicle Class), whether it is on another trip on the given trip duration.
-
         ArrayList<Vehicle> deployable_vehicles = new ArrayList<Vehicle>();
         ArrayList<Vehicle> unavailable_vehicles = new ArrayList<Vehicle>();
-        double trip_length = port.distanceCalc(port_of_arrival);
+        ArrayList<Vehicle> vehicles = FileIOUtil.ReadVehicleFromFile();
 
-        for (Trip trip: getTrip_list()){
-            if ((trip.date_of_arrival.after(date_of_departure) && trip.date_of_arrival.before(date_of_arrival)) || ((trip.date_of_departure.after(date_of_departure) && trip.date_of_departure.before(date_of_arrival)))){
-                unavailable_vehicles.add(trip.vehicle);
-            }
-        }
-        for (Vehicle vehicle: Vehicle.getVehicles()){
-            if (port_of_arrival.getLandingAbility()){
-                if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, trip_length)){
-                    deployable_vehicles.add(vehicle);
+        double trip_length = port.distanceCalc(port_of_arrival);
+        File file = new File("trip.json");
+        if (file.length() == 0){
+            if (port_of_arrival.isLandingAbility()){
+                for (Vehicle vehicle: vehicles){
+                    if (vehicle.getCurrent_port().equals(port)){
+                        deployable_vehicles.add(vehicle);
+                    }
                 }
             }
             else {
-                if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, trip_length) && vehicle.getName().startsWith("SH")){
-                    deployable_vehicles.add(vehicle);
+                for (Vehicle vehicle: vehicles){
+                    if (vehicle.getCurrent_port().equals(port) && vehicle.getVid().startsWith("SH")){
+                        deployable_vehicles.add(vehicle);
+                    }
+                }
+            }
+        }
+        else {
+            for (Trip trip: FileIOUtil.ReadTripFromFile()){
+                if (trip.getD_port().equals(port)){
+                    if ((!date_of_departure.after(trip.date_of_arrival) && !date_of_departure.before(trip.date_of_departure)) || ((!date_of_arrival.after(trip.date_of_arrival) && !date_of_arrival.before(trip.date_of_departure)))){
+                        unavailable_vehicles.add(trip.getVehicle());
+                    }
                 }
             }
 
+            for (Vehicle vehicle: vehicles){
+                if (port_of_arrival.isLandingAbility()){
+                    if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, trip_length) && vehicle.getCurrent_port().equals(port)){
+                        deployable_vehicles.add(vehicle);
+                    }
+                }
+                else {
+                    if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, trip_length) && vehicle.getName().startsWith("SH") && vehicle.getCurrent_port().equals(port)){
+                        deployable_vehicles.add(vehicle);
+                    }
+                }
+
+            }
         }
         return deployable_vehicles;
     }
 
-    public static void inputTripIntoFile(File file, Trip trip){
-        if (file.length() == 0 ){
-            try{
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("trip.txt"));
-                oos.writeObject(trip);
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        else {
-            try{
-                AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("trip.txt", true));
-                oos.writeObject(trip);
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
+
 
     //this method will register a trip into the system. It prompts the user to input date and port of departure and arrival, it will then have them choose from a list of available vehicles returned by the checking_vehicle_eligibility function. The id of the trip will be randomly generated
-    public static void registeringTrip(Port port){
-        Scanner scanner = new Scanner(System.in);
-        // Enter date of departure
-        System.out.println("Please input the year of the trip");
-        int year = scanner.nextInt();
-        System.out.println("Please input the month of the trip");
-        int month = scanner.nextInt();
-        System.out.println("Please input the date of the trip");
-        int date = scanner.nextInt();
-        Date date_of_departure = new Date(year, month, date);
-
-        // Enter date of arrival
-        System.out.println("Please input the year of the trip");
-        year = scanner.nextInt();
-        System.out.println("Please input the month of the trip");
-        month = scanner.nextInt();
-        System.out.println("Please input the date of the trip");
-        date = scanner.nextInt();
-        Date date_of_arrival = new Date(year, month, date);
-
-        //Choose the destination port
-        System.out.println("Please enter the Id of the destination port");
-        String Pid = scanner.nextLine();
-        Port port_of_arrival = Port.queryPortbyID(Pid);
-
-
-        //Choose the containers to be delivered
-        ArrayList<Container> selected_container_list = new ArrayList<Container>();
-
-
-        while (true){
-            System.out.println("Please select the container you would like to load");
-            String Cid = scanner.nextLine();
-            Container container = Container.queryContainerbyID(Cid);
-            selected_container_list.add(container);
-            System.out.println("Would you like to add more containers? (Y-N)");
-            String rep = scanner.nextLine();
-            if (rep.equals("N")){
-                break;
-            }
-        }
-
-        //Check vehicle availability
-        ArrayList<Vehicle> deployable_vehicles = checking_vehicle_eligibility(port, port_of_arrival, date_of_arrival, date_of_departure, selected_container_list);
-
-        //Choose Vehicle
-        String prompt = "Please select from the following vehicles ";
-        for (int i =0; i <deployable_vehicles.size(); i++){
-            prompt = prompt + i + ": " + deployable_vehicles.get(i).getName();
-        }
-        System.out.println(prompt);
-        int selection = scanner.nextInt();
-        Vehicle selected_vehicle = deployable_vehicles.get(selection);
-
+    public static Trip registeringTrip(Port port, Date date_of_departure, Date date_of_arrival, Port port_of_arrival, ArrayList<Container> containers, Vehicle selected_vehicle) throws IOException {
         //Randomly generating trip id
         Random generating_id = new Random();
         String Tid = "t";
         for (int i =1; i<=5; i++){
             Tid = Tid + generating_id.nextInt(10);
         }
-        File file = new File("trip.txt");
-        Trip new_trip = new Trip(selected_vehicle, Tid, port, port_of_arrival, date_of_departure, date_of_arrival);
-        inputTripIntoFile(file, new_trip );
+        Trip new_trip = new Trip(selected_vehicle, Tid, port, port_of_arrival, date_of_departure, date_of_arrival, containers);
+        FileIOUtil.InputObjectIntoFile(new_trip, "trip.json");
+        return new_trip;
     }
 
-    public static Trip queryByName(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter the Id of the trip");
-        String Cid = scanner.nextLine();
-        for (Trip trip: getTrip_list()){
-            if (trip.getTid().equals(Cid)){
+    public static Trip queryByName(String Tid) throws IOException {
+        for (Trip trip: FileIOUtil.ReadTripFromFile()){
+            if (trip.getTid().equals(Tid)){
                 return trip;
             }
         }
         return null;
     }
     //This method allows Port Manager to view the outgoing trips after/before inputted dates
-    public static void outgoingTrip_query(Port port){
+    public static void outgoingTrip_query(Port port, Date after, Date before) throws IOException {
         //Have the users input the interval they would like to query
         ArrayList<Trip> trip_from_port = new ArrayList<Trip>();
-        ArrayList<Trip> trip_list = getTrip_list();
-
-        Date after = null;
-        Date before = null;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Would you like to filter by date after? (Y-N)");
-        if (scanner.nextLine().equals("Y")){
-            System.out.println("Please enter the year");
-            int year = scanner.nextInt();
-            System.out.println("Please enter the month");
-            int month = scanner.nextInt();
-            System.out.println("Please enter the date");
-            int date = scanner.nextInt();
-            after = new Date(year,month,date);
-        }
-
-        System.out.println("Would you like to filter by date before? (Y-N)");
-        if (scanner.nextLine().equals("Y")){
-            System.out.println("Please enter the year");
-            int year = scanner.nextInt();
-            System.out.println("Please enter the month");
-            int month = scanner.nextInt();
-            System.out.println("Please enter the date");
-            int date = scanner.nextInt();
-            before = new Date(year,month,date);
+        ArrayList<Trip> trip_list = new ArrayList<Trip>();
+        for (Trip o: FileIOUtil.ReadTripFromFile()){
+            trip_list.add(o);
         }
         //querying
         //if the user does not enter both before and after filtering dates, the function will return all outgoing trips
         if (after == null && before == null){
             for (Trip trip: trip_list){
-                if (trip.D_port == port){
+                if (trip.getD_port().equals(port)){
                     trip_from_port.add(trip);
                 }
             }
@@ -256,7 +202,7 @@ public class Trip implements Serializable{
         //if the user only enter the after filtering date, the function will return all the outgoing trip after that date
         else if (before == null && !(after==null)){
             for (Trip trip: trip_list){
-                if (trip.date_of_departure.after(after) && trip.D_port == port){
+                if (trip.date_of_departure.after(after) && trip.getD_port().equals(port)){
                     trip_from_port.add(trip);
                 }
             }
@@ -265,14 +211,14 @@ public class Trip implements Serializable{
         //if the user only enter the after filtering date, the function will return all the outgoing trip before that date
         else if (after == null && !(before == null)){
             for (Trip trip: trip_list){
-                if (trip.date_of_departure.before(before) && trip.D_port == port){
+                if (trip.date_of_departure.before(before) && trip.getD_port().equals(port)){
                     trip_from_port.add(trip);
                 }
             }
         }
         else {
             for (Trip trip: trip_list){
-                if (trip.date_of_departure.before(before) && trip.date_of_departure.after(after) && trip.D_port == port){
+                if (trip.date_of_departure.before(before) && trip.date_of_departure.after(after) && trip.getD_port().equals(port)){
                     trip_from_port.add(trip);
                 }
             }
@@ -282,33 +228,12 @@ public class Trip implements Serializable{
 
 
     //This method allows Port Manager to see the incoming trip after/before inputted dates.
-    public static void incomingTrip_query(Port port){
+    public static void incomingTrip_query(Port port, Date after, Date before) throws IOException {
         //Have the users input the interval they would like to query
         ArrayList<Trip> trip_from_port = new ArrayList<Trip>();
-        ArrayList<Trip> trip_list = getTrip_list();
-
-        Date after = null;
-        Date before = null;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Would you like to filter by date after? (Y-N)");
-        if (scanner.nextLine().equals("Y")){
-            System.out.println("Please enter the year");
-            int year = scanner.nextInt();
-            System.out.println("Please enter the month");
-            int month = scanner.nextInt();
-            System.out.println("Please enter the date");
-            int date = scanner.nextInt();
-            after = new Date(year,month,date);
-        }
-        System.out.println("Would you like to filter by date before? (Y-N)");
-        if (scanner.nextLine().equals("Y")){
-            System.out.println("Please enter the year");
-            int year = scanner.nextInt();
-            System.out.println("Please enter the month");
-            int month = scanner.nextInt();
-            System.out.println("Please enter the date");
-            int date = scanner.nextInt();
-            before = new Date(year,month,date);
+        ArrayList<Trip> trip_list = new ArrayList<Trip>();
+        for (Trip o: FileIOUtil.ReadTripFromFile()){
+            trip_list.add(o);
         }
 
         //querying
@@ -339,11 +264,16 @@ public class Trip implements Serializable{
         }
         else{
             for (Trip trip: trip_list){
-                if (trip.date_of_arrival.before(before) && trip.date_of_arrival.after(after) && trip.D_port == port){
+                if (trip.date_of_arrival.before(before) && trip.date_of_arrival.after(after) && trip.getD_port().equals(port)){
                     trip_from_port.add(trip);
                 }
             }
         }
         System.out.println(trip_from_port);
+    }
+
+    public void completeTrip() throws IOException {
+        this.setStatus("Complete");
+        FileIOUtil.updateObjectFromFile("trip.json", this);
     }
 }
