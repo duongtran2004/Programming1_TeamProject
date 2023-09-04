@@ -64,7 +64,6 @@ public class FileIOUtil {
         else {
             ArrayList<Object> list = new ArrayList<Object>();
             list.add(object);
-            System.out.println(list);
             mapper.writeValue(file, list);
         }
     }
