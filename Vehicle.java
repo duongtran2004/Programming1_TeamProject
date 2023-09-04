@@ -1,133 +1,153 @@
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 import java.util.Random;
+@JsonIdentityInfo(generator =ObjectIdGenerators.UUIDGenerator.class, property = "@vid", scope = Vehicle.class)
 public class Vehicle implements Serializable {
-    private String Vid;
+    private static final long serialVersionUID = 6529685098267757690L;
+    private String vid;
     private String name;
+    //@JsonBackReference (value = "onsite_vehicles")
     private Port current_port;
-    private Trip current_trip;
+    private Trip current_trip = null;
     private double fuel_capacity;
     private double current_fuel;
     private double carrying_capacity;
+    //@JsonManagedReference (value = "vehicles")
     private ArrayList<Container> container_list = new ArrayList<Container>();
+    public Vehicle(){
 
+    }
 
-
-    public Vehicle(String Vid, String name, double fuel_capacity, double carrying_capacity){
-        this.Vid = Vid;
+    public Vehicle(String Vid, String name, double fuel_capacity, double carrying_capacity, Port port){
+        this.vid = Vid;
         this.name = name;
         this.fuel_capacity = fuel_capacity;
         this.carrying_capacity = carrying_capacity;
+        this.current_port = port;
     }
+
 
     public String toString(){
-        return "Vehicle Id: " + this.Vid + "\n" + "Vehicle name: " + this.name + "\n" + "Current Port: " + this.current_port + "\n" + "Current Trip: " + this.current_trip + "\n" + "Fuel capacity: " + this.fuel_capacity + "\n" + "Current fuel: " + this.current_fuel + "\n" + "Carrying capacity: " + this.carrying_capacity + "\n";}
+        return "Vehicle Id: " + this.vid + "\n" + "Vehicle name: " + this.name + "\n" + "Current Port: " + this.current_port + "\n" + "Current Trip: " + this.current_trip + "\n" + "Fuel capacity: " + this.fuel_capacity + "\n" + "Current fuel: " + this.current_fuel + "\n" + "Carrying capacity: " + this.carrying_capacity + "\n" +"\n";}
 
 
+    //------------------------------------Getters-------------------------------------------//
     public String getVid(){
-        return this.Vid;
+        return this.vid;
     }
 
-    public Trip getCurrent_trip(){
+    public Trip getCurrent_trip(String Tid){
         return this.current_trip;
     }
     public void setCurrent_trip(Trip trip){
         this.current_trip = trip;
     }
+
+    public Port getCurrent_port(){
+        return this.current_port;
+    }
+
     public String getName(){
         return this.name;
     }
 
-    public static ArrayList<Vehicle> getVehicles(){
-        ArrayList<Vehicle> vehicle_list = new ArrayList<Vehicle>();
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("vehicle.txt"));
-            while (true){
-                try {
-                    Vehicle vehicle = (Vehicle) ois.readObject();
-                    vehicle_list.add(vehicle);
-                } catch (EOFException e){
-                    break;
-                } catch (ClassNotFoundException e){
-                    e.printStackTrace();
-                }
-
-            }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        return vehicle_list;
+    public Trip getCurrent_trip() {
+        return current_trip;
     }
 
-    public static void inputVehicleIntoFile(File file, Vehicle vehicle){
-        if (file.length() == 0 ){
-            try{
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("vehicle.txt"));
-                oos.writeObject(vehicle);
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        else {
-            try{
-                AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("vehicle.txt", true));
-                oos.writeObject(vehicle);
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
+    public double getFuel_capacity() {
+        return fuel_capacity;
     }
 
-    public static void createNewVehicle(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please inout the name of the vehicle");
-        String name = scanner.nextLine();
-        System.out.println("Choose 0 for ship, 1 for basic truck, 2 for reefer truck, 3 for tanker truck");
-        int selection = scanner.nextInt();
-        System.out.println("Please input the fuel capacity of the vehicle");
-        double fuel_capacity = scanner.nextDouble();
-        System.out.println("Please input the carrying capacity of the vehicle");
-        double carrying_capacity = scanner.nextDouble();
+    public double getCurrent_fuel() {
+        return current_fuel;
+    }
+
+    public double getCarrying_capacity() {
+        return carrying_capacity;
+    }
+
+    public ArrayList<Container> getContainer_list() {
+        return container_list;
+    }
+    //-------------------------------------------------Setters------------------------------------//
+
+
+    public void setVid(String vid) {
+        this.vid = vid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCurrent_port(Port current_port) {
+        this.current_port = current_port;
+    }
+
+    public void setFuel_capacity(double fuel_capacity) {
+        this.fuel_capacity = fuel_capacity;
+    }
+
+    public void setCurrent_fuel(double current_fuel) {
+        this.current_fuel = current_fuel;
+    }
+
+    public void setCarrying_capacity(double carrying_capacity) {
+        this.carrying_capacity = carrying_capacity;
+    }
+
+    public void setContainer_list(ArrayList<Container> container_list) {
+        this.container_list = container_list;
+    }
+
+    public boolean equals(Vehicle vehicle) {
+        if (vehicle == this) {
+            System.out.println("true");
+            return true;
+        }
+
+        return this.vid.equals(vehicle.vid) && this.name.equals(vehicle.name);
+
+
+    }
+
+    public static Vehicle createNewVehicle(String name, int type, double fuel_capacity, double carrying_capacity, Port port) throws IOException {
+
         String Vid = "";
         Random random_id = new Random();
         for (int i =0; i<=10; i++){
             Vid = Vid + random_id.nextInt(10);
         }
-        File file = new File("vehicle.txt");
-        if (selection == 0){
-           Vehicle vehicle = new ship("SH"+Vid, name, fuel_capacity, carrying_capacity);
-           inputVehicleIntoFile(file, vehicle);
-
+        File file = new File("vehicle.json");
+        Vehicle vehicle = new Vehicle();
+        if (type == 0){
+           vehicle = new ship("SH"+Vid, name, fuel_capacity, carrying_capacity, port);
         }
-        else if (selection == 1){
-            Vehicle vehicle = new basic_truck("BT"+Vid, name, fuel_capacity, carrying_capacity);
-            inputVehicleIntoFile(file, vehicle);
+        else if (type == 1){
+            vehicle = new basic_truck("BT"+Vid, name, fuel_capacity, carrying_capacity, port);
         }
 
-        else if (selection == 2){
-            Vehicle vehicle = new reefer_truck("RT"+Vid, name, fuel_capacity, carrying_capacity);
-            inputVehicleIntoFile(file, vehicle);
+        else if (type == 2){
+            vehicle = new reefer_truck("RT"+Vid, name, fuel_capacity, carrying_capacity, port);
         }
 
         else {
-            Vehicle vehicle = new tanker_truck("TT"+Vid, name, fuel_capacity, carrying_capacity);
-            inputVehicleIntoFile(file, vehicle);
+            vehicle = new tanker_truck("TT"+Vid, name, fuel_capacity, carrying_capacity, port);
         }
+        FileIOUtil.InputObjectIntoFile(vehicle, "vehicle.json");
+        return vehicle;
     }
 
-    public static Vehicle queryVehiclebyID(String Vid){
-        for (Vehicle vehicle: Vehicle.getVehicles()){
-            if (vehicle.Vid.equals(Vid)){
+    public static Vehicle queryVehiclebyID(String Vid) throws IOException {
+        for (Vehicle vehicle: FileIOUtil.ReadVehicleFromFile()){
+            if (vehicle.vid.equals(Vid)){
                 return vehicle;
             }
         }
@@ -135,106 +155,34 @@ public class Vehicle implements Serializable {
         return null;
     }
 
-    public void accept_container(Container container){
+    public void accept_container(Container container) throws IOException {
         this.container_list.add(container);
-        ArrayList<Vehicle> vehicle_list = getVehicles();
-        File file = new File("vehicle.txt");
-        for (int i =0; i<vehicle_list.size(); i++){
-            if (vehicle_list.get(i) == this){
-                vehicle_list.set(i, this);
-            }
-        }
-        file.delete();
-        try{
-            file.createNewFile();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
+        FileIOUtil.updateObjectFromFile("vehicle.json", this);
     }
 
-    public void unload_container(Container container){
+    public void unload_container(Container container) throws IOException {
         this.container_list.remove(container);
-        ArrayList<Vehicle> vehicle_list = getVehicles();
-        File file = new File("vehicle.txt");
-        for (int i =0; i<vehicle_list.size(); i++){
-            if (vehicle_list.get(i) == this){
-                vehicle_list.set(i, this);
-            }
-        }
-        file.delete();
-        try{
-            file.createNewFile();
-            for (Vehicle vehicle: vehicle_list){
-                Vehicle.inputVehicleIntoFile(file, vehicle);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        FileIOUtil.updateObjectFromFile("vehicle.json", this);
     }
 
-    public void depart(Trip trip){
+    public void depart(Trip trip) throws IOException {
         this.current_port = null;
         this.current_trip = trip;
-        ArrayList<Vehicle> vehicle_list = getVehicles();
-        File file = new File("vehicle.txt");
-        for (int i =0; i<vehicle_list.size(); i++){
-            if (vehicle_list.get(i) == this){
-                vehicle_list.set(i, this);
-            }
-        }
-        file.delete();
-        try{
-            file.createNewFile();
-            for (Vehicle vehicle: vehicle_list){
-                Vehicle.inputVehicleIntoFile(file, vehicle);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        FileIOUtil.updateObjectFromFile("vehicle.json", this);
+
 
     }
 
-    public void arrive(Port current_port){
-        this.current_port = this.current_trip.getA_port();
+    public void arrive(Port port) throws IOException {
+        this.current_port = port;
         this.current_trip = null;
-        ArrayList<Vehicle> vehicle_list = getVehicles();
-        File file = new File("vehicle.txt");
-        for (int i =0; i<vehicle_list.size(); i++){
-            if (vehicle_list.get(i) == this){
-                vehicle_list.set(i, this);
-            }
-        }
-        file.delete();
-        try{
-            file.createNewFile();
-            for (Vehicle vehicle: vehicle_list){
-                Vehicle.inputVehicleIntoFile(file, vehicle);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        FileIOUtil.updateObjectFromFile("vehicle.json", this);
 
     }
 
-    public boolean refuel(){
+    public boolean refuel() throws IOException {
         this.current_fuel = this.fuel_capacity;
-        ArrayList<Vehicle> vehicle_list = getVehicles();
-        File file = new File("vehicle.txt");
-        for (int i =0; i<vehicle_list.size(); i++){
-            if (vehicle_list.get(i) == this){
-                vehicle_list.set(i, this);
-            }
-        }
-        file.delete();
-        try{
-            file.createNewFile();
-            for (Vehicle vehicle: vehicle_list){
-                Vehicle.inputVehicleIntoFile(file, vehicle);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        FileIOUtil.updateObjectFromFile("vehicle.json", this);
         return true;
     }
 
@@ -244,7 +192,7 @@ public class Vehicle implements Serializable {
 
         for (Container container: container_list){
             container_weight = container_weight + container.getWeight();
-            if (Vid.startsWith("SH")){
+            if (vid.startsWith("SH")){
                 if (container.getCid().startsWith("DS")){
                     fuel_consumption_per_km = fuel_consumption_per_km + container.getFuel_consumption_per_km_on_ship();
                 }
@@ -286,7 +234,13 @@ public class Vehicle implements Serializable {
         double total_fuel_consumption = trip_length * fuel_consumption_per_km;
 
         if (this.fuel_capacity < total_fuel_consumption || this.carrying_capacity < container_weight){
-            System.out.println("the fuel capacity of this vehicle does not meet the fuel demand of this trip. Please unload some containers");
+            if (this.fuel_capacity < total_fuel_consumption){
+                System.out.println("the fuel capacity of this vehicle does not meet the fuel demand of this trip. Please unload some containers");
+            }
+            else{
+                System.out.println("Carrying capacity exceeded!");
+            }
+
             return false;
         }
         else {
@@ -297,36 +251,31 @@ public class Vehicle implements Serializable {
         }
     }
 
-
-
 }
 
 class ship extends Vehicle{
-    public ship(String Vid, String name, double fuel_capacity, double carrying_capacity){
-        super(Vid, name, fuel_capacity,carrying_capacity);
+    public ship(String Vid, String name, double fuel_capacity, double carrying_capacity, Port port){
+        super(Vid, name, fuel_capacity,carrying_capacity, port);
     }
 
 }
 
-class truck extends Vehicle{
-    public truck(String Vid, String name, double fuel_capacity, double carrying_capacity){
-        super(Vid, name, fuel_capacity,carrying_capacity);
+
+class basic_truck extends Vehicle{
+    public basic_truck(String Vid, String name, double fuel_capacity, double carrying_capacity, Port port){
+        super(Vid, name, fuel_capacity,carrying_capacity, port);
     }
 }
 
-class basic_truck extends truck{
-    public basic_truck(String Vid, String name, double fuel_capacity, double carrying_capacity){
-        super(Vid, name, fuel_capacity,carrying_capacity);
+class tanker_truck extends Vehicle{
+    public tanker_truck(String Vid, String name, double fuel_capacity, double carrying_capacity, Port port){
+        super(Vid, name, fuel_capacity,carrying_capacity, port);
+    }
+}
+class reefer_truck extends Vehicle{
+    public reefer_truck(String Vid, String name, double fuel_capacity, double carrying_capacity, Port port){
+        super(Vid, name, fuel_capacity,carrying_capacity, port);
     }
 }
 
-class tanker_truck extends truck{
-    public tanker_truck(String Vid, String name, double fuel_capacity, double carrying_capacity){
-        super(Vid, name, fuel_capacity,carrying_capacity);
-    }
-}
-class reefer_truck extends truck{
-    public reefer_truck(String Vid, String name, double fuel_capacity, double carrying_capacity){
-        super(Vid, name, fuel_capacity,carrying_capacity);
-    }
-}
+
