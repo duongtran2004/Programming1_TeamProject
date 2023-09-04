@@ -11,8 +11,8 @@ import java.util.Random;
 public class Port implements Serializable {
     private static final long serialVersionUID = 6529685098267757690L;
     private String pid;
-    private String latitude;
-    private String longtitude;
+    private double latitude;
+    private double longtitude;
     private String name;
     private double storingCapacity;
     private boolean landingAbility;
@@ -27,7 +27,7 @@ public class Port implements Serializable {
             return true;
         }
 
-        return this.pid.equals(port.pid) && this.name.equals(port.name) && this.latitude.equals(port.latitude)  && this.longtitude.equals(port.longtitude);
+        return this.pid.equals(port.pid) && this.name.equals(port.name) && this.latitude == port.latitude  && this.longtitude == port.longtitude;
 
 
     }
@@ -36,7 +36,7 @@ public class Port implements Serializable {
 
     }
 
-    public Port(String Pid, String latitude, String longtitude, String name, double storing_capacity, boolean landing_ability){
+    public Port(String Pid, double latitude, double longtitude, String name, double storing_capacity, boolean landing_ability){
         this.pid = Pid;
         this.latitude = latitude;
         this.longtitude = longtitude;
@@ -47,7 +47,7 @@ public class Port implements Serializable {
     public String toString(){
         return "Port id: " + this.pid + "\n" + "Port name: "+ this.name + "\n" + "Port latitude: " + this.latitude + "\n" + "Port longtitude: " + this.longtitude + "\n" + "Storing capacity: "+ this.storingCapacity + "\n" + "Landing ability: " + this.landingAbility + "\n" + "\n";}
 
-    public static Port createNewPort(String name, String latitude, String longtitude, double storing_capacity, boolean landing_ability) throws IOException {
+    public static Port createNewPort(String name, double latitude, double longtitude, double storing_capacity, boolean landing_ability) throws IOException {
         String Pid = "";
         Random random = new Random();
         for (int i = 1; i<=10; i++){
@@ -75,11 +75,11 @@ public class Port implements Serializable {
         return pid;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public String getLongtitude() {
+    public double getLongtitude() {
         return longtitude;
     }
 
@@ -110,11 +110,11 @@ public class Port implements Serializable {
         this.pid = pid;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongtitude(String longtitude) {
+    public void setLongtitude(double longtitude) {
         this.longtitude = longtitude;
     }
 
@@ -156,9 +156,14 @@ public class Port implements Serializable {
         this.onsite_containers.add(container);
         FileIOUtil.updateObjectFromFile("port.json", this);
     }
+    public void checkout_containers(Container container) throws IOException {
+        this.onsite_containers.remove(container);
+        FileIOUtil.updateObjectFromFile("port.json", this);
+    }
 
     public double distanceCalc(Port targetPort){
-        double distance = 0.0;
+        double distance = (3440.1 * Math.acos((Math.sin(this.latitude * (Math.PI/180)) * Math.sin(targetPort.latitude * (Math.PI/180))) + Math.cos(this.latitude * (Math.PI/180)) * Math.cos(targetPort.latitude * (Math.PI/180)) * Math.cos(this.longtitude * (Math.PI/180) - targetPort.longtitude * (Math.PI/180)))) * 1.852 ;
+        distance = (double) Math.round(distance * 100)/100;
         return distance;
     }
 
