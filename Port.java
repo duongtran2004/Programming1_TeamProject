@@ -1,243 +1,166 @@
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
 
+@JsonIdentityInfo(generator =ObjectIdGenerators.UUIDGenerator.class, property = "@pid", scope = Port.class)
 public class Port implements Serializable {
-    private String Pid;
+    private static final long serialVersionUID = 6529685098267757690L;
+    private String pid;
     private String latitude;
     private String longtitude;
     private String name;
-    private double storing_capacity;
-    private boolean landing_ability;
-    private ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
-    private ArrayList<Container> containers = new ArrayList<Container>();
+    private double storingCapacity;
+    private boolean landingAbility;
+    //@JsonManagedReference(value = "onsite_vehicles")
+    private ArrayList<Vehicle> onsite_vehicles = new ArrayList<Vehicle>();
+    //@JsonManagedReference(value = "onsite_containers")
+    private ArrayList<Container> onsite_containers = new ArrayList<Container>();
 
-    public static ArrayList<Port> getPorts(){
-        ArrayList<Port> port_list = new ArrayList<Port>();
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("port.txt"));
-            while (true){
-                try{
-                    Port port = (Port) ois.readObject();
-                    port_list.add(port);
-                } catch (EOFException e){
-                    break;
-                }
-                catch (ClassNotFoundException e){
-                    e.printStackTrace();
-                }
-
-            }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
+    public boolean equals(Port port) {
+        if (port == this) {
+            System.out.println("true");
+            return true;
         }
-        return port_list;
+
+        return this.pid.equals(port.pid) && this.name.equals(port.name) && this.latitude.equals(port.latitude)  && this.longtitude.equals(port.longtitude);
+
+
+    }
+
+    public  Port(){
+
     }
 
     public Port(String Pid, String latitude, String longtitude, String name, double storing_capacity, boolean landing_ability){
-        this.Pid = Pid;
+        this.pid = Pid;
         this.latitude = latitude;
         this.longtitude = longtitude;
         this.name = name;
-        this.storing_capacity = storing_capacity;
-        this.landing_ability = landing_ability;
+        this.storingCapacity = storing_capacity;
+        this.landingAbility = landing_ability;
     }
-
-    public String getPortName(){
-        return this.name;
-    }
-
-    public boolean getLandingAbility(){
-        return this.landing_ability;
-    }
-
-    public ArrayList<Vehicle> getVehiclesList(){
-        return this.vehicles;
-    }
-
-    public ArrayList<Container> getContainerList(){
-        return this.containers;
-    }
-
     public String toString(){
-        return "Port id: " + this.Pid + "\n" + "Port name: "+ this.name + "\n" + "Port latitude: " + this.latitude + "\n" + "Port longtitude: " + this.longtitude + "\n" + "Storing capacity: "+ this.storing_capacity + "\n" + "Landing ability: " + this.landing_ability;}
+        return "Port id: " + this.pid + "\n" + "Port name: "+ this.name + "\n" + "Port latitude: " + this.latitude + "\n" + "Port longtitude: " + this.longtitude + "\n" + "Storing capacity: "+ this.storingCapacity + "\n" + "Landing ability: " + this.landingAbility + "\n" + "\n";}
 
-    public static ArrayList<Port> getPort(){
-        ArrayList<Port> port_list = new ArrayList<Port>();
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("port.txt"));
-            while (true){
-                try {
-                    Port port = (Port) ois.readObject();
-                    port_list.add(port);
-                } catch (EOFException e){
-                    break;
-                } catch (ClassNotFoundException e){
-                    e.printStackTrace();
-                }
-
-            }
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        return port_list;
-    }
-
-    public static void inputPortIntoFile(File file, Port port){
-        if (file.length() == 0){
-            try{
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("port.txt"));
-                oos.writeObject(port);
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        else {
-            try{
-                AppendObjectOutputStream oos = new AppendObjectOutputStream(new FileOutputStream("port.txt", true));
-                oos.writeObject(port);
-                oos.close();
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void createNewPort(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please input the name of the new port: ");
-        String name = scanner.nextLine();
-        System.out.println("Please input the port latitude");
-        String latitude = scanner.nextLine();
-        System.out.println("Please input the port longtitude");
-        String longtitude = scanner.nextLine();
-        System.out.println("PLease input its storing capacity");
-        double storing_capacity = scanner.nextDouble();
-        System.out.println("Please input its landing ability");
-        boolean landing_ability = scanner.nextBoolean();
+    public static Port createNewPort(String name, String latitude, String longtitude, double storing_capacity, boolean landing_ability) throws IOException {
         String Pid = "";
         Random random = new Random();
         for (int i = 1; i<=10; i++){
             Pid = Pid + random.nextInt(10);
         }
-        File file = new File("port.txt");
         Port new_port = new Port(Pid, latitude, longtitude, name, storing_capacity, landing_ability);
-        inputPortIntoFile(file, new_port);
+        FileIOUtil.InputObjectIntoFile(new_port, "port.json");
+        return new_port;
 
     }
 
-    public static Port queryPortbyID(String Pid){
-        for (Port port: getPorts()){
-            if (port.Pid.equals(Pid)){
+    public static Port queryPortbyID(String Pid) throws IOException {
+        for (Port port: FileIOUtil.ReadPortFromFile()){
+            if (port.pid.equals(Pid)){
                 return port;
             }
         }
         System.out.println("This port does not exist");
         return null;
     }
+    //--------------------------------------------Getters-----------------------------------------//
 
 
-    public void receive_vehicles(Vehicle vehicle){
-        vehicles.add(vehicle);
-        ArrayList<Port> port_list = getPort();
-        File file = new File("port.txt");
-        for (int i =0; i<port_list.size(); i++){
-            if (port_list.get(i) == this){
-                port_list.set(i, this);
-            }
-        }
-        file.delete();
-        try{
-            file.createNewFile();
-            for (Port port: port_list){
-                inputPortIntoFile(file, port);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-    public void sendoff_vehicles(Vehicle vehicle){
-        vehicles.remove(vehicle);
-        ArrayList<Port> port_list = getPort();
-        File file = new File("port.txt");
-        for (int i =0; i<port_list.size(); i++){
-            if (port_list.get(i) == this){
-                port_list.set(i, this);
-            }
-        }
-        file.delete();
-        try{
-            file.createNewFile();
-            for (Port port: port_list){
-                inputPortIntoFile(file, port);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-
-
-
-
+    public String getPid() {
+        return pid;
     }
 
-    public void load_containers_off_vehicle(Container container){
-        containers.add(container);
-        ArrayList<Port> port_list = getPort();
-        File file = new File("port.txt");
-        for (int i =0; i<port_list.size(); i++){
-            if (port_list.get(i) == this){
-                port_list.set(i, this);
-            }
-        }
-        file.delete();
-        try{
-            file.createNewFile();
-            for (Port port: port_list){
-                inputPortIntoFile(file, port);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void load_containers_on_vehicle(Container container){
-        containers.remove(container);
-        ArrayList<Port> port_list = getPort();
-        File file = new File("port.txt");
-        for (int i =0; i<port_list.size(); i++){
-            if (port_list.get(i) == this){
-                port_list.set(i, this);
-            }
-        }
-        file.delete();
-        try{
-            file.createNewFile();
-            for (Port port: port_list){
-                inputPortIntoFile(file, port);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+    public String getLongtitude() {
+        return longtitude;
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public double getStoringCapacity() {
+        return storingCapacity;
+    }
+
+    public boolean isLandingAbility() {
+        return landingAbility;
+    }
+
+    public ArrayList<Vehicle> getOnsite_vehicles() {
+        return onsite_vehicles;
+    }
+
+    public ArrayList<Container> getOnsite_containers() {
+        return onsite_containers;
+    }
+
+    //-----------------------------------------------------Setters---------------------------------------------//
+
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongtitude(String longtitude) {
+        this.longtitude = longtitude;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStoringCapacity(double storingCapacity) {
+        this.storingCapacity = storingCapacity;
+    }
+
+    public void setLandingAbility(boolean landingAbility) {
+        this.landingAbility = landingAbility;
+    }
+
+    public void setOnsite_vehicles(ArrayList<Vehicle> onsite_vehicles) {
+        this.onsite_vehicles = onsite_vehicles;
+    }
+
+    public void setOnsite_containers(ArrayList<Container> onsite_containers) {
+        this.onsite_containers = onsite_containers;
+    }
+
+    public void accept_vehicles(Vehicle vehicle) throws IOException {
+        this.onsite_vehicles.add(vehicle);
+        FileIOUtil.updateObjectFromFile("port.json", this);
+
+    }
+    public void checkout_vehicles(Vehicle vehicle) throws IOException {
+        for (int i =0; i < this.onsite_vehicles.size(); i++){
+            if (this.onsite_vehicles.get(i).equals(vehicle)){
+                this.onsite_vehicles.remove(onsite_vehicles.get(i));
+            }
+        }
+        FileIOUtil.updateObjectFromFile("port.json", this);
+    }
+
+    public void accept_containers(Container container) throws IOException {
+        this.onsite_containers.add(container);
+        FileIOUtil.updateObjectFromFile("port.json", this);
     }
 
     public double distanceCalc(Port targetPort){
         double distance = 0.0;
         return distance;
     }
-
-
 
 
 
