@@ -10,3 +10,5 @@
 10. Add refuel method to the Port Manager Class which calls the refuel method in the vehicle class.
 11. Update the remove methods so that when an object is removed, other objects that use it as property are updated.
 12. When a trip is completed, it is only retained in the trip.json file for up to 7 days. Write a method that accomplishes this. This method will be called when Port Managers log in.
+13. Write report 
+14. Plan for video recording, record demonstration video 
