@@ -7,3 +7,6 @@
 7. Provide comments on each method on their functions
 8. Fix the UML to match the app.
 9. The update methods in the System Admin, and the update trip method in the Port Manager class are not complete. Complete them. Please note that every time you update an object, you have to update any other object that uses it as an property.
+10. Add refuel method to the Port Manager Class which calls the refuel method in the vehicle class.
+11. Update the remove methods so that when an object is removed, other objects that use it as property are updated.
+12. When a trip is completed, it is only retained in the trip.json file for up to 7 days. Write a method that accomplishes this. This method will be called when Port Managers log in.
