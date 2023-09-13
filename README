@@ -1,12 +1,9 @@
-Tasks for this week:
-
--Finish Read Methods in User class (Instructions could be found in the Read Methods section in the User Class)
-
--Finish Update Methods in User class (Instruction could be found in the Update Methods section in the User Class)
-
--Implement User Input Control. Most User Inputs could be found in the User class. Instruction:
-    Have users re-enter if the input is found in incorrect format. Ensure that latitude and longtitude is in correct format by using Regular Expression. When users are given options, often in the form of numbers, ensure that users only enter the given numbers. Handle Input Type Mismatch exception(e.g users entering number when boolean value is expected)
-    When users are asked a Yes No question, only accept values such as (Yes, yes, YES, no, No, NO y, Y, n, N)
-    Given users the option to return to the previous step. (Hint: use Recursion)
-
--The program might not run properly on your computer. In that case, see how to apply the 3 attached jar file 
+1. Error Handling for the Read Methods in the FileIOUtil class. Catching the FileNotExist Exception so that the method would return null in case the file does not exist. Update the remove and update methods accordingly since they use the read methods (What will they do in case the files do not exist?)
+2. Error Handling for User Input. Do not let them enter alphabetic letters where numbers are expected.
+3. Search for repetitive blocks of code and convert them into a method in the Utlity Class
+4. Read through the Utlity, Port Manager, System Admin, Administrative class to get a general idea of what the main methods are and what they do.
+5. Run the methods, fix any errors encountered.
+6. Fix all weak warnings.
+7. Provide comments on each method on their functions
+8. Fix the UML to match the app.
+9. The update methods in the System Admin, and the update trip method in the Port Manager class are not complete. Complete them. Please note that every time you update an object, you have to update any other object that uses it as an property.
