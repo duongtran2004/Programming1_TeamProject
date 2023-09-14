@@ -1,0 +1,14 @@
+//Constructor 
+ public Port(String Pid, double latitude, double longtitude, String name, double storing_capacity, boolean landing_ability){
+        this.pid = Pid;
+        this.latitude = latitude;
+        this.longtitude = longtitude;
+        this.name = name;
+        this.storingCapacity = storing_capacity; (aka total weight 
+        this.landingAbility = landing_ability;
+    }
+latitude: vi do aka ngang
+longtitude: kinh do aka doc
+
+Port lists (10)
+p1,10.350763521711404,107.06656901146908,VungTau, 
