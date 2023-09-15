@@ -1,0 +1,5 @@
+[{"pid":"p1","latitude":10.350763521711404,"longtitude":107.06656901146908,"name":"VungTau","storingCapacity":8.7876688E7,"landingAbility":true},
+  {"pid":"p2","latitude":1.3539389150639312,"longtitude":103.85097857413851,"name":"Singapore","storingCapacity":8.7876688E7,"landingAbility":true},
+  {"pid":"p3","latitude":13.678013256725489,"longtitude":100.52214040968757,"name":"Bangkok","storingCapacity":8.7876688E7,"landingAbility":true},
+  {"pid":"p4","latitude":11.593050570216564,"longtitude":102.97761914843173,"name":"Sihanoukville","storingCapacity":8.7876688E7,"landingAbility":false},
+  {"pid":"p5","latitude":3.8017726184842022,"longtitude":100.98508365208035,"name":"Malaca","storingCapacity":8.7876688E7,"landingAbility":false}]
