@@ -1,3 +1,9 @@
+Magellan Port Management System
+Demonstration link on Youtube: https://www.youtube.com/watch?v=1a_8ZFl-G
+
+GitHub repository link: https://github.com/duongtran2004/Programming1_TeamProject
+
+Leftover tasks: 
 1. Error Handling for the Read Methods in the FileIOUtil class. Catching the FileNotExist Exception so that the method would return null in case the file does not exist. Update the remove and update methods accordingly since they use the read methods (What will they do in case the files do not exist?)
 2. Error Handling for User Input. Do not let them enter alphabetic letters where numbers are expected.
 3. Search for repetitive blocks of code and convert them into a method in the Utlity Class
