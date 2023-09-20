@@ -350,7 +350,7 @@ public class Vehicle implements Serializable {
     public static void filteringVehiclebyType() throws IOException {
         Scanner scanner = new Scanner(System.in);
         while (true){
-            System.out.println("Please select the vehicle type you want to filter:\ns: ship\nbt: basic trucks\nrt: reefer trucks\ntt: tanker trucks\nq: quite");
+            System.out.println("Please select the vehicle type you want to filter:\nsh: ship\nbt: basic trucks\nrt: reefer trucks\ntt: tanker trucks\nq: quit");
             String selection = scanner.nextLine();
             if (selection.equalsIgnoreCase("q")){
                 break;
@@ -395,7 +395,7 @@ public class Vehicle implements Serializable {
             }
         }
         Utlity.sortingVehicle(vehicles);
-        System.out.println(vehicles);
+        System.out.println(Utlity.vehicle_Table(vehicles));
     }
 
 }
