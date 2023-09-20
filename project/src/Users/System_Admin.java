@@ -118,7 +118,7 @@ public class System_Admin extends User{
             int selection = scanner.nextInt();
             scanner.nextLine();
             port = FileIOUtil.ReadPortFromFile().get(selection-1);
-            if (!Utlity.yes_Or_no("Please check port detail:\n" + password + "\n" + "Would you like to choose another port? (Y or N)" )){
+            if (!Utlity.yes_Or_no("Please check port detail:\n" + port + "\n" + "Would you like to choose another port? (Y or N)" )){
                 break;
             }
 
@@ -464,7 +464,7 @@ public class System_Admin extends User{
 
     public static boolean updateContainer() throws IOException {
         Container update_container = new Container();
-        FileIOUtil.updateVehicleFromFile(update_container);
+
         return true;
     }
 
