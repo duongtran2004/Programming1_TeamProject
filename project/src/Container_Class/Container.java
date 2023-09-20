@@ -246,24 +246,28 @@ public class Container implements Serializable {
                 ArrayList<Dry_Storage> containers = Dry_Storage.getDryStorage();
                 Utlity.sortingDSContainer(containers);
                 System.out.println(Utlity.DS_Table(containers));
+                break;
 
             }
             else if (selection.equalsIgnoreCase("ot")){
                 ArrayList<Open_Top> containers = Open_Top.getOpenTop();
                 Utlity.sortingOTContainer(containers);
                 System.out.println(Utlity.OT_Table(containers));
+                break;
 
             }
             else if (selection.equalsIgnoreCase("os")){
                 ArrayList<Open_Side> containers = Open_Side.getOpenSide();
                 Utlity.sortingOSContainer(containers);
                 System.out.println(Utlity.OS_Table(containers));
+                break;
 
             }
             else if (selection.equalsIgnoreCase("re")) {
                 ArrayList<Refriderated> containers = Refriderated.getRefridgerated();
                 Utlity.sortingREContainer(containers);
                 System.out.println(Utlity.RE_Table(containers));
+                break;
 
 
             }
@@ -271,6 +275,7 @@ public class Container implements Serializable {
                 ArrayList<Liquid> containers = Liquid.getLiquid();
                 Utlity.sortingLIContainer(containers);
                 System.out.println(Utlity.LI_Table(containers));
+                break;
 
             }
             else {
