@@ -55,43 +55,35 @@ public class Container implements Serializable {
         for (int i =0; i<=10; i++){
             Cid = Cid + random_id.nextInt(10);
         }
-        System.out.println(type);
 
         if (type == 0){
             Dry_Storage container = new Dry_Storage("DS" + Cid, name, weight, port);
             FileIOUtil.InputObjectIntoFile(container, "DryStorage.json");
-            port.setNumberofContainersOnsite(port.getNumberofContainersOnsite() + 1.0);
-            port.setCurrentCapacity(port.getCurrentCapacity() + weight);
-            FileIOUtil.updatePortFromFile(port);
+
         }
         if (type == 1){
             Open_Top container = new Open_Top("OT" + Cid, name, weight, port);
             FileIOUtil.InputObjectIntoFile(container, "OpenTop.json");
-            port.setNumberofContainersOnsite(port.getNumberofContainersOnsite() + 1.0);
-            port.setCurrentCapacity(port.getCurrentCapacity() + weight);
-            FileIOUtil.updatePortFromFile(port);
+
         }
         if (type == 2){
             Open_Side container = new Open_Side("OS" + Cid, name, weight, port );
             FileIOUtil.InputObjectIntoFile(container, "OpenSide.json");
-            port.setNumberofContainersOnsite(port.getNumberofContainersOnsite() + 1.0);
-            port.setCurrentCapacity(port.getCurrentCapacity() + weight);
-            FileIOUtil.updatePortFromFile(port);
+
         }
         if (type == 3){
             Refriderated container = new Refriderated("RE" + Cid, name, weight, port);
             FileIOUtil.InputObjectIntoFile(container, "Refrigerated.json");
-            port.setNumberofContainersOnsite(port.getNumberofContainersOnsite() + 1.0);
-            port.setCurrentCapacity(port.getCurrentCapacity() + weight);
-            FileIOUtil.updatePortFromFile(port);
+
         }
         if (type == 4){
             Liquid container = new Liquid("LI" + Cid, name, weight, port);
             FileIOUtil.InputObjectIntoFile(container, "Liquid.json");
-            port.setNumberofContainersOnsite(port.getNumberofContainersOnsite() + 1.0);
-            port.setCurrentCapacity(port.getCurrentCapacity() + weight);
-            FileIOUtil.updatePortFromFile(port);
+
         }
+        port.setNumberofContainersOnsite(port.getNumberofContainersOnsite() + 1);
+        port.setCurrentCapacity(port.getCurrentCapacity() + weight);
+        FileIOUtil.updatePortFromFile(port);
         return true;
 
     }
@@ -111,10 +103,6 @@ public class Container implements Serializable {
         return current_vehicle;
     }
 
-    public void setCurrent_vehicle(Vehicle vehicle){
-        this.current_vehicle = vehicle;
-    }
-
     public double getWeight(){
         return this.weight;
     }
@@ -125,6 +113,34 @@ public class Container implements Serializable {
 
     public double getFuel_consumption_per_km_on_truck(){
         return this.fuel_consumption_per_km_on_truck;
+    }
+
+    public void setCid(String cid) {
+        this.cid = cid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setCurrent_port(Port current_port) {
+        this.current_port = current_port;
+    }
+
+    public void setCurrent_vehicle(Vehicle vehicle){
+        this.current_vehicle = vehicle;
+    }
+
+    public void setFuel_consumption_per_km_on_ship(double fuel_consumption_per_km_on_ship) {
+        this.fuel_consumption_per_km_on_ship = fuel_consumption_per_km_on_ship;
+    }
+
+    public void setFuel_consumption_per_km_on_truck(double fuel_consumption_per_km_on_truck) {
+        this.fuel_consumption_per_km_on_truck = fuel_consumption_per_km_on_truck;
     }
 
     public static ArrayList<Container> getContainer() throws IOException {
@@ -208,19 +224,25 @@ public class Container implements Serializable {
                 return container;
             }
         }
-        System.out.println("Container_Class.Container does not exist");
+        System.out.println("Container does not exist");
         return null;
     }
 
-    public void enterPort(Port port) throws IOException {
-        this.current_port = port;
+    public void enterPort(Port arrival_port) throws IOException {
+        this.current_port = arrival_port;
         FileIOUtil.updateContainerFromFile(this);
+        arrival_port.setCurrentCapacity(arrival_port.getCurrentCapacity() - this.weight);
+        arrival_port.setNumberofContainersOnsite(arrival_port.getNumberofContainersOnsite() - 1);
+        FileIOUtil.updatePortFromFile(arrival_port);
 
     }
 
-    public void leavePort() throws IOException {
+    public void leavePort(Port departure_port) throws IOException {
         this.current_port = null;
+        departure_port.setCurrentCapacity(departure_port.getCurrentCapacity() - this.weight);
+        departure_port.setNumberofContainersOnsite(departure_port.getNumberofContainersOnsite() - 1);
         FileIOUtil.updateContainerFromFile(this);
+        FileIOUtil.updatePortFromFile(departure_port);
     }
 
 
