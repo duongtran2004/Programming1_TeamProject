@@ -32,7 +32,7 @@ public class Vehicle implements Serializable {
 
 
     public String toString(){
-        return "Vehicle Id: " + this.vid + "\n" + "Vehicle name: " + this.name + "\n" + "Current Port.Port: " + this.current_port + "\n" + "Fuel capacity: " + this.fuel_capacity + "\n" + "Current fuel: " + this.current_fuel + "\n" + "Carrying capacity: " + this.carrying_capacity + "\n" +"\n";}
+        return "Vehicle Id: " + this.vid + "\n" + "Vehicle name: " + this.name + "\n" + "Current Port: \n" + this.current_port + "\n" + "Fuel capacity: " + this.fuel_capacity + "\n" + "Current fuel: " + this.current_fuel + "\n" + "Carrying capacity: " + this.carrying_capacity + "\n" +"\n";}
 
 
     //------------------------------------Getters-------------------------------------------//
@@ -72,33 +72,38 @@ public class Vehicle implements Serializable {
         this.name = name;
     }
 
-    public void setCurrent_port(Port current_port) {
+    public void setCurrent_port(Port current_port) throws IOException {
         this.current_port = current_port;
+
     }
 
-    public void setFuel_capacity(double fuel_capacity) {
+    public void setFuel_capacity(double fuel_capacity) throws IOException {
         this.fuel_capacity = fuel_capacity;
+
     }
 
-    public void setCurrent_fuel(double current_fuel) {
+    public void setCurrent_fuel(double current_fuel) throws IOException {
         this.current_fuel = current_fuel;
+
     }
 
-    public void setCarrying_capacity(double carrying_capacity) {
+    public void setCarrying_capacity(double carrying_capacity) throws IOException {
         this.carrying_capacity = carrying_capacity;
+
     }
 
-
-    public boolean equals(Vehicle vehicle) {
-        if (vehicle == this) {
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
             System.out.println("true");
             return true;
         }
 
-        return this.vid.equals(vehicle.vid) && this.name.equals(vehicle.name);
-
-
+        return this.vid.equals(((Vehicle) obj).vid) && this.name.equals(((Vehicle) obj).name);
     }
+
+
+
 
     public static boolean createNewVehicle(String name, int type, double fuel_capacity, double carrying_capacity, Port port) throws IOException {
 
@@ -107,7 +112,6 @@ public class Vehicle implements Serializable {
         for (int i =0; i<=10; i++){
             Vid = Vid + random_id.nextInt(10);
         }
-        Vehicle vehicle = null;
         if (type == 0){
            ship new_ship = new ship("SH"+Vid, name, fuel_capacity, carrying_capacity, port);
             FileIOUtil.InputObjectIntoFile(new_ship, "Ship.json");
@@ -127,6 +131,11 @@ public class Vehicle implements Serializable {
             tanker_truck new_tanker = new tanker_truck("TT"+Vid, name, fuel_capacity, carrying_capacity, port);
             FileIOUtil.InputObjectIntoFile(new_tanker, "TankerTruck.json");
         }
+
+        port.setNumberofVehiclesOnsite(port.getNumberofVehiclesOnsite() + 1);
+        FileIOUtil.updatePortFromFile(port);
+
+
         return true;
     }
 
@@ -271,7 +280,7 @@ public class Vehicle implements Serializable {
 
     }
 
-    public void depart(Trip trip) throws IOException {
+    public void depart() throws IOException {
         this.current_port = null;
         FileIOUtil.updateVehicleFromFile(this);
 
@@ -399,6 +408,7 @@ public class Vehicle implements Serializable {
     }
 
 }
+
 
 
 
