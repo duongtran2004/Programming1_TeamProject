@@ -327,7 +327,7 @@ public class System_Admin extends User{
         while (true){
             String container_type = "";
             while (true){
-                System.out.println("Choose 0 for Dry Storage, 1 for Open Top, 2 for Open Side, 3 for Refrigerated, 4 for Container_Class.Liquid");
+                System.out.println("Choose 0 for Dry Storage, 1 for Open Top, 2 for Open Side, 3 for Refrigerated, 4 for Liquid");
                 type = scanner.nextInt();
                 if (type >=0 && type <= 4){
                     break;
