@@ -359,36 +359,26 @@ public class Trip implements Serializable {
         System.out.println("Please enter vehicle id");
         String Vid = scanner.nextLine();
         Vehicle filter_vehicle = Vehicle.queryVehiclebyID(Vid);
-        for (int i =0; i < filtered_list.size(); i++){
-            if (!filter_vehicle.equals(filtered_list.get(i).getVehicle())){
-                filtered_list.remove(filtered_list.get(i));
-            }
-        }
+        filtered_list.removeIf(n -> n.getVehicle().equals(filter_vehicle));
+
     }
 
     public static void filteringTripbyArrivalPort(ArrayList<Trip> filtered_list) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter Arrival Port.Port id");
+        System.out.println("Please enter Arrival Port id");
         String Pid = scanner.nextLine();
         Port filter_port = Port.queryPortbyID(Pid);
-        for (int i =0; i < filtered_list.size(); i++){
-            if (!filter_port.equals(filtered_list.get(i).getA_port())){
-                filtered_list.remove(filtered_list.get(i));
-            }
-        }
+        filtered_list.removeIf(n->n.getA_port().equals(filter_port));
         System.out.println(filtered_list);
     }
 
     public static void filteringTripbyDeparturePort(ArrayList<Trip> filtered_list) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter Arrival Port.Port id");
+        System.out.println("Please enter Arrival Port id");
         String Pid = scanner.nextLine();
         Port filter_port = Port.queryPortbyID(Pid);
-        for (int i =0; i < filtered_list.size(); i++){
-            if (!filter_port.equals(filtered_list.get(i).getD_port())){
-                filtered_list.remove(filtered_list.get(i));
-            }
-        }
+        filtered_list.removeIf(n->n.getD_port().equals(filter_port));
+
     }
 
     public static void filteringTripbyStatus(ArrayList<Trip> filtered_list){
