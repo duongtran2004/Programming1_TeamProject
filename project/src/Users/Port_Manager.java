@@ -186,6 +186,8 @@ public class Port_Manager extends User{
         ArrayList<Container> containers = new ArrayList<Container>();
         ArrayList<String> container_id = new ArrayList<String>();
         Vehicle selected_vehicle = null;
+        boolean tanker_constraint = false;
+        boolean reefer_constrain = false;
         while (true){
             System.out.println("Please input the departure year of the trip");
             int year = scanner.nextInt();
@@ -208,8 +210,14 @@ public class Port_Manager extends User{
             int date = scanner.nextInt();
             date_of_arrival = new Date(year, month-1, date);
             scanner.nextLine();
+
             if (!Utlity.yes_Or_no("Date of arrival: " + date_of_arrival + ". " + "Would you like to enter again? (Y-N)" )){
                 break;
+            }
+            else{
+                if (date_of_arrival.before(date_of_departure)){
+                    System.out.println("Date of arrival cannot be before date of departure.");
+                }
             }
 
 
@@ -220,8 +228,10 @@ public class Port_Manager extends User{
             String Pid = scanner.next();
             scanner.nextLine();
             port_of_arrival = Port.queryPortbyID(Pid);
-            if (!Utlity.yes_Or_no("Please check if the following Port.Port is correct.\n" + port_of_arrival +"\n" + "Would you like to enter again? (Y-N)" )){
-                break;
+            if (port_of_arrival != null){
+                if (!Utlity.yes_Or_no("Please check if the following Port is correct.\n" + port_of_arrival +"\n" + "Would you like to enter again? (Y-N)" )){
+                    break;
+                }
             }
         }
 
@@ -231,14 +241,25 @@ public class Port_Manager extends User{
                 System.out.println("Please select the container you would like to load");
                 String Cid = scanner.nextLine();
                 Container container = Container.queryContainerbyID(Cid);
-                containers.add(container);
-                container_id.add(Cid);
+                if (container != null){
+                    containers.add(container);
+                    container_id.add(Cid);
+                }
+
                 if (!Utlity.yes_Or_no("Would you like to add more containers? (Y-N)" )){
                     break;
                 }
             }
-            if (!Utlity.yes_Or_no("Please check if the following containers are correct.\n" + containers +"\n" + "Would you like to enter again? (Y-N)" )){
+            if (!Utlity.yes_Or_no("Please check if the following containers are correct.\n" + Utlity.container_Table(containers) +"\n" + "Would you like to enter again? (Y-N)" )){
                 break;
+            }
+        }
+        for (String cid: container_id){
+            if (cid.startsWith("LI")){
+                tanker_constraint = true;
+            }
+            if (cid.startsWith("RE")){
+                reefer_constrain = true;
             }
         }
 
@@ -247,14 +268,27 @@ public class Port_Manager extends User{
             ArrayList<Vehicle> deployable_vehicles = new ArrayList<Vehicle>();
             deployable_vehicles = Trip.checking_vehicle_eligibility(this.port, port_of_arrival, date_of_arrival, date_of_departure, containers);
             //Choose Vehicle_Classes.Vehicle
-            String prompt = "Please select from the following vehicles ";
-            for (int i =0; i <deployable_vehicles.size(); i++){
-                prompt = prompt + i + ": " + deployable_vehicles.get(i).getName() + "\n";
+            while (true){
+                String prompt = "Please select from the following vehicles\n ";
+                for (int i =0; i <deployable_vehicles.size(); i++){
+                    prompt = prompt + i + ": " + deployable_vehicles.get(i).getName() + "\n";
+                }
+                System.out.println(Utlity.vehicle_Table(deployable_vehicles));
+                System.out.println(prompt);
+                int selection = scanner.nextInt();
+                selected_vehicle = deployable_vehicles.get(selection);
+                if (tanker_constraint && (selected_vehicle.getVid().startsWith("SH") || selected_vehicle.getVid().startsWith("TT"))){
+                    break;
+                }
+                if (tanker_constraint && (selected_vehicle.getVid().startsWith("SH") || selected_vehicle.getVid().startsWith("RT"))){
+                    break;
+                }
+                else {
+                    System.out.println("Vehicle-Container constraint violated. Please choose again");
+                }
+
             }
-            System.out.println(Utlity.vehicle_Table(deployable_vehicles));
-            System.out.println(prompt);
-            int selection = scanner.nextInt();
-            selected_vehicle = deployable_vehicles.get(selection);
+
             if (!Utlity.yes_Or_no("Please check if the following vehicle is correct.\n" + selected_vehicle +"\n" + "Would you like to enter again? (Y-N)" )){
                 break;
             }
@@ -267,8 +301,43 @@ public class Port_Manager extends User{
         System.out.println("Please input the id of the trip");
         String Tid = scanner.nextLine();
         Trip trip = Trip.queryByName(Tid);
-        Port main_port = Port.queryPortbyID(this.port.getPid());
-        trip.getVehicle().depart(trip);
+        String Vid = trip.getVehicle().getVid();
+        Port port = Port.queryPortbyID(this.port.getPid());
+        port.setNumberofVehiclesOnsite(port.getNumberofVehiclesOnsite() - 1);
+        FileIOUtil.updatePortFromFile(port);
+        if (Vid.startsWith("SH")){
+            ship.queryShipbyId(Vid).depart();
+        }
+        else if (Vid.startsWith("BT")){
+            basic_truck.queryBasicTruckbyId(Vid).depart();
+        }
+        if (Vid.startsWith("RT")){
+            reefer_truck.queryReeferTruckbyId(Vid).depart();
+        }
+        if (Vid.startsWith("TT")){
+            tanker_truck.queryTankerTruckbyId(Vid).depart();
+        }
+        for (String Cid: trip.getTo_be_delivered_containers()){
+            if (Cid.startsWith("DS")){
+                Dry_Storage.queryDryStoragebyID(Cid).leavePort(port);
+            }
+            else if (Cid.startsWith("OT")){
+                Open_Top.queryOpenTopbyID(Cid).leavePort(port);
+            }
+            else if (Cid.startsWith("OS")){
+                Open_Side.queryOpenSidebyID(Cid).leavePort(port);
+            }
+            else if (Cid.startsWith("RE")){
+                Refriderated.queryRefridgeratedbyID(Cid).leavePort(port);
+            }
+            else{
+                Liquid.queryLiquidbyID(Cid).leavePort(port);
+            }
+
+        }
+
+
+
 
     }
     //this method is called after a vehicle reaches its destination port and finishes its trip. It will check the vehicle into the port
@@ -279,7 +348,40 @@ public class Port_Manager extends User{
         Trip trip = Trip.queryByName(Tid);
         trip.completeTrip();
         Port main_port = Port.queryPortbyID(this.port.getPid());
-        trip.getVehicle().arrive(main_port);
+        main_port.setNumberofVehiclesOnsite(main_port.getNumberofVehiclesOnsite() + 1);
+        FileIOUtil.updatePortFromFile(port);
+        String Vid = trip.getVehicle().getVid();
+        if (Vid.startsWith("SH")){
+            ship.queryShipbyId(Vid).arrive(main_port);
+        }
+        else if (Vid.startsWith("BT")){
+            basic_truck.queryBasicTruckbyId(Vid).arrive(main_port);
+        }
+        if (Vid.startsWith("RT")){
+            reefer_truck.queryReeferTruckbyId(Vid).arrive(main_port);
+        }
+        if (Vid.startsWith("TT")){
+            tanker_truck.queryTankerTruckbyId(Vid).arrive(main_port);
+        }
+        for (String Cid: trip.getTo_be_delivered_containers()){
+            if (Cid.startsWith("DS")){
+                Dry_Storage.queryDryStoragebyID(Cid).leavePort(main_port);
+            }
+            else if (Cid.startsWith("OT")){
+                Open_Top.queryOpenTopbyID(Cid).leavePort(main_port);
+            }
+            else if (Cid.startsWith("OS")){
+                Open_Side.queryOpenSidebyID(Cid).leavePort(main_port);
+            }
+            else if (Cid.startsWith("RE")){
+                Refriderated.queryRefridgeratedbyID(Cid).leavePort(main_port);
+            }
+            else{
+                Liquid.queryLiquidbyID(Cid).leavePort(main_port);
+            }
+
+        }
+
     }
     //this method is called when the port manager wants to load containers off a vehicle
     public void loadingContainersonVehicle() throws IOException {
@@ -291,23 +393,33 @@ public class Port_Manager extends User{
         for (String container_id: containers_to_be_loaded_on){
             if (container_id.startsWith("DS")){
                 Dry_Storage container = Dry_Storage.queryDryStoragebyID(container_id);
+                container.loadedonVehicle(trip.getVehicle());
                 FileIOUtil.updateContainerFromFile(container);
+
             }
             else if (container_id.startsWith("OT")){
                 Open_Top container = Open_Top.queryOpenTopbyID(container_id);
                 container.loadedonVehicle(trip.getVehicle());
+
+
             }
             else if (container_id.startsWith("OS")){
                 Open_Side container = Open_Side.queryOpenSidebyID(container_id);
                 container.loadedonVehicle(trip.getVehicle());
+
+
             }
             else if (container_id.startsWith("RE")){
                 Refriderated container = Refriderated.queryRefridgeratedbyID(container_id);
                 container.loadedonVehicle(trip.getVehicle());
+
+
             }
             else {
                 Liquid container = Liquid.queryLiquidbyID(container_id);
                 container.loadedonVehicle(trip.getVehicle());
+
+
             }
 
 
