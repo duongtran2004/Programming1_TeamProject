@@ -731,7 +731,6 @@ public class Utlity {
                     }
                 }
                 scanner.nextLine();
-                System.out.println(vehicles);
                 System.out.println("Would you like to continue sorting? Y-N");
                 response = scanner.nextLine();
                 if (response.equals("N")){
@@ -747,7 +746,7 @@ public class Utlity {
     }
 
     public static void sortingByShip(ArrayList<ship> vehicles){
-        int selection = 0;
+        String selection = "";
         Scanner scanner = new Scanner(System.in);
         while (true){
             System.out.println("Would you like to sort the list? (Y or N) ");
@@ -757,21 +756,28 @@ public class Utlity {
             }
             else if (response.equalsIgnoreCase("y")) {
                 while (true){
-                    System.out.println("Please select the property you want to sort the list by:\n1: Max Carrying Capacity\n2: Fuel Capacity\n3: Current Fuel\n0: Quite ");
-                    selection = scanner.nextInt();
+                    System.out.println("Please select the property you want to sort the list by:\na: Max Carrying Capacity\nb: Fuel Capacity\nc: Current Fuel\nq: Quit ");
+                    selection = scanner.nextLine();
                     System.out.println("What order you would like to sort your list? (true: ascending _ false: descending");
                     boolean order = scanner.nextBoolean();
-                    if (selection == 0){
+                    scanner.nextLine();
+                    if (selection.equalsIgnoreCase("q")){
                         break;
                     }
-                    else if (selection == 1){
+                    if (selection.equalsIgnoreCase("a")){
                         ship.sortby_MaxCapacity(vehicles, order);
+                        System.out.println(Utlity.ship_Table(vehicles));
+                        break;
                     }
-                    else if (selection == 2){
+                    else if (selection.equalsIgnoreCase("b")){
                         ship.sortby_FuelCapacity(vehicles, order);
+                        System.out.println(Utlity.ship_Table(vehicles));
+                        break;
                     }
-                    else if (selection == 3){
+                    else if (selection.equalsIgnoreCase("c")){
                         ship.sortby_CurrentFuel(vehicles, order);
+                        System.out.println(Utlity.ship_Table(vehicles));
+                        break;
                     }
                     else{
                         System.out.println("option does not exist. Please choose again");
@@ -779,13 +785,13 @@ public class Utlity {
                 }
             }
             else {
-                System.out.println("Option does not exist. Please choose again.");
+                System.out.println("Option does not exist. Please choose again");
             }
         }
     }
 
     public static void sortingBasicTruck(ArrayList<basic_truck> vehicles){
-        int selection = 0;
+        String selection = "";
         Scanner scanner = new Scanner(System.in);
         while (true){
             System.out.println("Would you like to sort the list? (Y or N) ");
@@ -795,22 +801,29 @@ public class Utlity {
             }
             else if (response.equalsIgnoreCase("y")) {
                 while (true){
-                    System.out.println("Please select the property you want to sort the list by:\n1: Max Carrying Capacity\n2: Fuel Capacity\n3: Current Fuel\n0: Quit ");
-                    selection = scanner.nextInt();
+                    System.out.println("Please select the property you want to sort the list by:\na: Max Carrying Capacity\nb: Fuel Capacity\nc: Current Fuel\nq: Quit ");
+                    selection = scanner.nextLine();
                     System.out.println("What order you would like to sort your list? (true: ascending _ false: descending");
                     boolean order = scanner.nextBoolean();
-                    if (selection == 0){
+                    scanner.nextLine();
+                    if (selection.equalsIgnoreCase("q")){
                         break;
                     }
-                    if (selection == 1){
+                    if (selection.equalsIgnoreCase("a")){
                         basic_truck.sortby_MaxCapacity(vehicles, order);
+                        System.out.println(Utlity.basic_Table(vehicles));
+                        break;
                     }
-                    else if (selection == 2){
+                    else if (selection.equalsIgnoreCase("b")){
                         basic_truck.sortby_FuelCapacity(vehicles, order);
-
+                        System.out.println(Utlity.basic_Table(vehicles));
+                        break;
                     }
-                    else if (selection == 3){
+                    else if (selection.equalsIgnoreCase("c")){
                         basic_truck.sortby_CurrentFuel(vehicles, order);
+                        System.out.println(Utlity.basic_Table(vehicles));
+                        break;
+
                     }
                     else{
                         System.out.println("option does not exist. Please choose again");
@@ -818,14 +831,14 @@ public class Utlity {
                 }
             }
             else {
-                System.out.println("Option does not exist. Please choose again.");
+                System.out.println("Option does not exist. Please choose again");
             }
         }
     }
 
 
     public static void sortingReefer(ArrayList<reefer_truck> vehicles){
-        int selection = 0;
+        String selection = "";
         Scanner scanner = new Scanner(System.in);
         while (true){
             System.out.println("Would you like to sort the list? (Y or N) ");
@@ -835,21 +848,28 @@ public class Utlity {
             }
             else if (response.equalsIgnoreCase("y")) {
                 while (true){
-                    System.out.println("Please select the property you want to sort the list by:\n1: Max Carrying Capacity\n2: Fuel Capacity\n3: Current Fuel\n0: Quit ");
-                    selection = scanner.nextInt();
+                    System.out.println("Please select the property you want to sort the list by:\na: Max Carrying Capacity\nb: Fuel Capacity\nc: Current Fuel\nq: Quit ");
+                    selection = scanner.nextLine();
                     System.out.println("What order you would like to sort your list? (true: ascending _ false: descending");
                     boolean order = scanner.nextBoolean();
-                    if (selection == 0){
+                    scanner.nextLine();
+                    if (selection.equals("q")){
                         break;
                     }
-                    if (selection == 1){
+                    if (selection.equalsIgnoreCase("a")){
                         reefer_truck.sortby_MaxCapacity(vehicles, order);
+                        System.out.println(Utlity.reefer_Table(vehicles));
+                        break;
                     }
-                    else if (selection == 2){
+                    else if (selection.equalsIgnoreCase("b")){
                         reefer_truck.sortby_FuelCapacity(vehicles, order);
+                        System.out.println(Utlity.reefer_Table(vehicles));
+                        break;
                     }
-                    else if (selection == 3){
+                    else if (selection.equalsIgnoreCase("c")){
                         reefer_truck.sortby_CurrentFuel(vehicles, order);
+                        System.out.println(Utlity.reefer_Table(vehicles));
+                        break;
                     }
                     else{
                         System.out.println("option does not exist. Please choose again");
@@ -863,7 +883,7 @@ public class Utlity {
     }
 
     public static void sortingTanker(ArrayList<tanker_truck> vehicles){
-        int selection = 0;
+        String selection = "";
         Scanner scanner = new Scanner(System.in);
         while (true){
             System.out.println("Would you like to sort the list? (Y or N) ");
@@ -873,21 +893,28 @@ public class Utlity {
             }
             else if (response.equalsIgnoreCase("y")) {
                 while (true){
-                    System.out.println("Please select the property you want to sort the list by:\n1: Max Carrying Capacity\n2: Fuel Capacity\n3: Current Fuel\n0: Quit ");
-                    selection = scanner.nextInt();
+                    System.out.println("Please select the property you want to sort the list by:\na: Max Carrying Capacity\nb: Fuel Capacity\nc: Current Fuel\nq: Quit ");
+                    selection = scanner.nextLine();
                     System.out.println("What order you would like to sort your list? (true: ascending _ false: descending");
                     boolean order = scanner.nextBoolean();
-                    if (selection == 0){
+                    scanner.nextLine();
+                    if (selection.equalsIgnoreCase("q")){
                         break;
                     }
-                    if (selection == 1){
+                    if (selection.equalsIgnoreCase("a")){
                         tanker_truck.sortby_MaxCapacity(vehicles, order);
+                        System.out.println(Utlity.tanker_Table(vehicles));
+                        break;
                     }
-                    else if (selection == 2){
+                    else if (selection.equalsIgnoreCase("b")){
                         tanker_truck.sortby_FuelCapacity(vehicles, order);
+                        System.out.println(Utlity.tanker_Table(vehicles));
+                        break;
                     }
-                    else if (selection == 3){
+                    else if (selection.equalsIgnoreCase("c")){
                         tanker_truck.sortby_CurrentFuel(vehicles, order);
+                        System.out.println(Utlity.tanker_Table(vehicles));
+                        break;
                     }
                     else{
                         System.out.println("option does not exist. Please choose again");
@@ -895,7 +922,7 @@ public class Utlity {
                 }
             }
             else {
-                System.out.println("Option does not exist. Please try again");
+                System.out.println("Option does not exist. Please choose again");
             }
         }
     }
@@ -947,6 +974,7 @@ public class Utlity {
             else if (response.equalsIgnoreCase("y")) {
                 System.out.println("By what order would you like to sort the list? (true: ascending _ false: descending)");
                 boolean order = scanner.nextBoolean();
+                scanner.nextLine();
                 Dry_Storage.sortContainerby_Weight(containers, order);
             }
             else {
@@ -967,6 +995,7 @@ public class Utlity {
             else if (response.equalsIgnoreCase("y")) {
                 System.out.println("By what order would you like to sort the list? (true: ascending _ false: descending)");
                 boolean order = scanner.nextBoolean();
+                scanner.nextLine();
                 Open_Top.sortContainerby_Weight(containers, order);
             }
             else {
@@ -985,6 +1014,7 @@ public class Utlity {
             else if (response.equalsIgnoreCase("y")) {
                 System.out.println("By what order would you like to sort the list? (true: ascending _ false: descending)");
                 boolean order = scanner.nextBoolean();
+                scanner.nextLine();
                 Open_Side.sortContainerby_Weight(containers, order);
             }
             else {
@@ -1003,6 +1033,7 @@ public class Utlity {
             else if (response.equalsIgnoreCase("y")) {
                 System.out.println("By what order would you like to sort the list? (true: ascending _ false: descending)");
                 boolean order = scanner.nextBoolean();
+                scanner.nextLine();
                 Refriderated.sortContainerby_Weight(containers, order);
             }
             else {
@@ -1022,6 +1053,7 @@ public class Utlity {
             else if (response.equalsIgnoreCase("y")) {
                 System.out.println("By what order would you like to sort the list? (true: ascending _ false: descending)");
                 boolean order = scanner.nextBoolean();
+                scanner.nextLine();
                 Liquid.sortContainerby_Weight(containers, order);
             }
             else {
@@ -1113,7 +1145,6 @@ public class Utlity {
             vehicles = Vehicle.getVehicles();
             System.out.println("Press t if you want to filter by type, p if you do want to filter by current port, s to search for vehicle by ID, and q to quit");
             String selection = scanner.nextLine();
-            scanner.nextLine();
             if (selection.equalsIgnoreCase("q")){
                 break;
             }
