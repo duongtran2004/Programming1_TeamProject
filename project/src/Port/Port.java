@@ -44,9 +44,9 @@ public class Port implements Serializable {
         return "Port.Port id: " + this.pid + "\n" + "Port.Port name: "+ this.name + "\n" + "Port latitude: " + this.latitude + "\n" + "Port.Port longitude: " + this.longitude + "\n" + "Storing capacity: "+ this.storingCapacity + "\n" + "Landing ability: " + this.landingAbility + "\n" + "\n";}
 
     public static Port createNewPort(String name, double latitude, double longitude, double storing_capacity, boolean landing_ability) throws IOException {
-        String Pid = "p-";
+        String Pid = "";
         Random random = new Random();
-        for (int i = 1; i<=5; i++){
+        for (int i = 1; i<=10; i++){
             Pid = Pid + random.nextInt(10);
         }
         Port new_port = new Port(Pid, latitude, longitude, name, storing_capacity, landing_ability);
@@ -133,6 +133,7 @@ public class Port implements Serializable {
                 for (int k = i+1; k < port_list.size(); k++){
                     if (port_list.get(k).getStoringCapacity() > max_capac){
                         index = k;
+                        max_capac = port_list.get(k).getStoringCapacity();
                     }
                 }
                 port_list.set(i, port_list.get(index));
@@ -147,6 +148,7 @@ public class Port implements Serializable {
                 for (int k = i+1; k < port_list.size(); k++){
                     if (port_list.get(k).getStoringCapacity() < min_capac){
                         index = k;
+                        min_capac = port_list.get(k).getStoringCapacity();
                     }
                 }
                 port_list.set(i, port_list.get(index));
@@ -162,20 +164,22 @@ public class Port implements Serializable {
             System.out.println("Enter landing ability (t: true _ f: false)");
             String response = scanner.nextLine();
             if (response.equalsIgnoreCase("t")){
-                for (int i =0; i< port_list.size(); i++){
+                port_list.removeIf(n -> !n.landingAbility);
+                /*for (int i =0; i< port_list.size(); i++){
                     if (!port_list.get(i).isLandingAbility()){
                         port_list.remove(port_list.get(i));
                     }
-                }
+                }*/
                 Utlity.sortingPort(port_list);
                 break;
             }
             else if (response.equalsIgnoreCase("f")){
-                for (int i =0; i< port_list.size(); i++){
+                port_list.removeIf(n -> n.landingAbility);
+                /*for (int i =0; i< port_list.size(); i++){
                     if (port_list.get(i).isLandingAbility()){
                         port_list.remove(port_list.get(i));
                     }
-                }
+                }*/
                 Utlity.sortingPort(port_list);
                 break;
             }
