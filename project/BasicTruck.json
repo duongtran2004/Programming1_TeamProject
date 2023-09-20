@@ -1,7 +1,0 @@
-[{"vid":"BT83125837149","name":"BA_871","current_port":{"pid":"5481614456","latitude":78.51,"longitude":-65.67,"name":"Continental Central","storingCapacity":10000.0,"landingAbility":true,"currentCapacity":0.0,"numberofContainersOnsite":0.0},"fuel_capacity":10000.0,"current_fuel":0.0,"carrying_capacity":10.0},
-{"vid":"BT83125831259","name":"BA_872","current_port":{"pid":"5481614456","latitude":78.51,"longitude":-65.67,"name":"Continental Central","storingCapacity":10000.0,"landingAbility":true,"currentCapacity":0.0,"numberofContainersOnsite":0.0},"fuel_capacity":9000.0,"current_fuel":0.0,"carrying_capacity":8.0},
-{"vid":"BT93126837149","name":"BA_811","current_port":{"pid":"5481614456","latitude":78.51,"longitude":-65.67,"name":"Continental Central","storingCapacity":10000.0,"landingAbility":true,"currentCapacity":0.0,"numberofContainersOnsite":0.0},"fuel_capacity":10500.0,"current_fuel":0.0,"carrying_capacity":11.0},
-{"vid":"BT84125217149","name":"BA_900","current_port":{"pid":"5481614456","latitude":78.51,"longitude":-65.67,"name":"Continental Central","storingCapacity":10000.0,"landingAbility":true,"currentCapacity":0.0,"numberofContainersOnsite":0.0},"fuel_capacity":9800.0,"current_fuel":0.0,"carrying_capacity":9.0},
-{"vid":"BT83913417149","name":"BA_211","current_port":{"pid":"5481614456","latitude":78.51,"longitude":-65.67,"name":"Continental Central","storingCapacity":10000.0,"landingAbility":true,"currentCapacity":0.0,"numberofContainersOnsite":0.0},"fuel_capacity":12000.0,"current_fuel":0.0,"carrying_capacity":11.0}
-
-]
