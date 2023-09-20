@@ -16,6 +16,9 @@ public class Port implements Serializable {
     private String name;
     private double storingCapacity;
     private boolean landingAbility;
+    private int numberofContainersOnsite=0;
+    private int numberofVehiclesOnsite=0;
+    private double currentCapacity=0;
 
     public boolean equals(Port port) {
         if (port == this) {
@@ -91,7 +94,25 @@ public class Port implements Serializable {
         return landingAbility;
     }
 
-                                            //-----------------------------------------------------Setters---------------------------------------------//
+
+    public int getNumberofContainersOnsite() {
+        return this.numberofContainersOnsite;
+    }
+
+    public int getNumberofVehiclesOnsite() {
+        return numberofVehiclesOnsite;
+    }
+    public void setCurrentCapacity(double capacity) {
+        this.currentCapacity = capacity;
+    }
+
+    public double getCurrentCapacity() {
+        return this.currentCapacity;
+    }
+
+
+
+    //-----------------------------------------------------Setters---------------------------------------------//
 
 
     public void setPid(String pid) {
@@ -116,6 +137,13 @@ public class Port implements Serializable {
 
     public void setLandingAbility(boolean landingAbility) {
         this.landingAbility = landingAbility;
+    }
+
+    public void setNumberofContainersOnsite(int number) {
+        this.numberofContainersOnsite = number;
+    }
+    public void setNumberofVehiclesOnsite(int numberofVehiclesOnsite) {
+        this.numberofVehiclesOnsite = numberofVehiclesOnsite;
     }
 
     public double distanceCalc(Port targetPort){
@@ -165,21 +193,11 @@ public class Port implements Serializable {
             String response = scanner.nextLine();
             if (response.equalsIgnoreCase("t")){
                 port_list.removeIf(n -> !n.landingAbility);
-                /*for (int i =0; i< port_list.size(); i++){
-                    if (!port_list.get(i).isLandingAbility()){
-                        port_list.remove(port_list.get(i));
-                    }
-                }*/
                 Utlity.sortingPort(port_list);
                 break;
             }
             else if (response.equalsIgnoreCase("f")){
                 port_list.removeIf(n -> n.landingAbility);
-                /*for (int i =0; i< port_list.size(); i++){
-                    if (port_list.get(i).isLandingAbility()){
-                        port_list.remove(port_list.get(i));
-                    }
-                }*/
                 Utlity.sortingPort(port_list);
                 break;
             }
@@ -189,19 +207,11 @@ public class Port implements Serializable {
 
         }
     }
-    public void setNumberofContainersOnsite(double v) {
-    }
 
-    public double getNumberofContainersOnsite() {
-        return 0.0;
-    }
 
-    public void setCurrentCapacity(double v) {
-    }
 
-    public double getCurrentCapacity() {
-        return 0.0;
-    }
+
+
 
 
 }
