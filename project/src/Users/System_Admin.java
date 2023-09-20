@@ -173,7 +173,7 @@ public class System_Admin extends User{
                     System.out.println("Incorrect latitude. Please enter again");
                 }
             }
-            if (!Utlity.yes_Or_no("Port.Port latitude: " + degree + " degree " + minute + " minutes " + second + " seconds " + hemisphere + ". " +"Would you like to enter again? (Y-N)" )){
+            if (!Utlity.yes_Or_no("Port latitude: " + degree + " degree " + minute + " minutes " + second + " seconds " + hemisphere + ". " +"Would you like to enter again? (Y-N)" )){
                 break;
             }
         }
@@ -210,7 +210,7 @@ public class System_Admin extends User{
                     System.out.println("Incorrect latitude. Please enter again");
                 }
             }
-            if (!Utlity.yes_Or_no("Port longitude: " + degree + " degree " + minute + " minutes " + second + " seconds" + hemisphere + ". " +"Would you like to enter again? (Y or N)" )){
+            if (!Utlity.yes_Or_no("Port longitude: " + degree + " degree " + minute + " minutes " + second + " seconds " + hemisphere + ". " +"Would you like to enter again? (Y or N)" )){
                 break;
             }
         }
@@ -218,6 +218,7 @@ public class System_Admin extends User{
         while (true){
             System.out.println("PLease input its storing capacity");
             storing_capacity = scanner.nextDouble();
+            storing_capacity = (double) Math.round(storing_capacity * 100)/100;
             scanner.nextLine();
             if (!Utlity.yes_Or_no("Port storing capacity: " + storing_capacity + ". " + "Would you like to enter again? (Y or N)")){
                 break;
@@ -275,6 +276,7 @@ public class System_Admin extends User{
         while (true){
             System.out.println("Please input the fuel capacity of the vehicle");
             fuel_capacity = scanner.nextDouble();
+            fuel_capacity = (double) Math.round(fuel_capacity * 100)/100;
             scanner.nextLine();
             if (!Utlity.yes_Or_no("Fuel capacity: " + fuel_capacity + ". " + "Would you like to enter again? (Y or N)")){
                 break;
@@ -285,6 +287,7 @@ public class System_Admin extends User{
         while (true){
             System.out.println("Please input the carrying capacity of the vehicle");
             carrying_capacity = scanner.nextDouble();
+            carrying_capacity = (double) Math.round(carrying_capacity * 100)/100;
             scanner.nextLine();
             if (!Utlity.yes_Or_no("Carrying capacity: " + carrying_capacity + ". " + "Would you like to enter again? (Y-N)")){
                 break;
@@ -371,6 +374,7 @@ public class System_Admin extends User{
         while (true){
             System.out.println("Please enter container weight");
             weight = scanner.nextDouble();
+            weight = (double) Math.round(weight * 100)/100;
             scanner.nextLine();
             if (!Utlity.yes_Or_no("Container weight: " + weight + ". " + "Would you like to enter again? (Y-N)")){
                 break;
