@@ -5,10 +5,7 @@ import Port.Port;
 import Trip.Trip;
 import Users.Port_Manager;
 import Users.System_Admin;
-import Vehicle_Classes.basic_truck;
-import Vehicle_Classes.reefer_truck;
-import Vehicle_Classes.ship;
-import Vehicle_Classes.tanker_truck;
+import Vehicle_Classes.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -206,13 +203,14 @@ public class FileIOUtil {
     }
 
 
-    public static void updateVehicleFromFile(Object object) throws IOException {
-        if (object instanceof ship){
+    public static void updateVehicleFromFile(Vehicle vehicle) throws IOException {
+        if (vehicle.getVid().startsWith("SH")){
+            ship ship = (ship) vehicle;
             File file = new File("Ship.json");
             ArrayList<ship> list = FileIOUtil.ReadShipFromFile();
             for (int i = 0; i < list.size(); i++){
-                if (list.get(i).equals((ship) object)){
-                    list.set(i, (ship) object);
+                if (list.get(i).equals(ship)){
+                    list.set(i, ship);
                     break;
                 }
             }
@@ -223,12 +221,13 @@ public class FileIOUtil {
             mapper.writeValue(file, list);
 
         }
-        else if (object instanceof basic_truck){
+        else if (vehicle.getVid().startsWith("BT")){
+            basic_truck basicTruck = (basic_truck) vehicle;
             File file = new File("BasicTruck.json");
             ArrayList<basic_truck> list = FileIOUtil.ReadBasicTruckFromFile();
             for (int i = 0; i < list.size(); i++){
-                if (list.get(i).equals((basic_truck) object)){
-                    list.set(i, (basic_truck) object);
+                if (list.get(i).equals(basicTruck)){
+                    list.set(i, basicTruck);
                     break;
                 }
             }
@@ -237,12 +236,13 @@ public class FileIOUtil {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(file, list);
         }
-        else if (object instanceof reefer_truck){
+        else if (vehicle.getVid().startsWith("RT")){
+            reefer_truck reeferTruck = (reefer_truck) vehicle;
             File file = new File("ReeferTruck.json");
             ArrayList<reefer_truck> list = FileIOUtil.ReadReeferFromFile();
             for (int i = 0; i < list.size(); i++){
-                if (list.get(i).equals((reefer_truck) object)){
-                    list.set(i, (reefer_truck) object);
+                if (list.get(i).equals(reeferTruck)){
+                    list.set(i, reeferTruck);
                     break;
                 }
             }
@@ -252,12 +252,13 @@ public class FileIOUtil {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(file, list);
         }
-        else if (object instanceof tanker_truck){
+        else if (vehicle.getVid().startsWith("TT")){
+            tanker_truck tankerTruck = (tanker_truck) vehicle;
             File file = new File("TankerTruck.json");
             ArrayList<tanker_truck> list = FileIOUtil.ReadTankerFromFile();
             for (int i = 0; i < list.size(); i++){
-                if (list.get(i).equals((tanker_truck) object)){
-                    list.set(i, (tanker_truck) object);
+                if (list.get(i).equals(tankerTruck)){
+                    list.set(i, tankerTruck);
                     break;
                 }
             }
