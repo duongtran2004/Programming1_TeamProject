@@ -1,6 +1,7 @@
 package Trip;
 
 import Port.Port;
+import Users.Utlity;
 import Vehicle_Classes.*;
 import FileIO.*;
 import Container_Class.*;
@@ -116,52 +117,51 @@ public class Trip implements Serializable {
 
     public static ArrayList<Vehicle> checking_vehicle_eligibility(Port port, Port port_of_arrival, Date date_of_arrival, Date date_of_departure, ArrayList<Container>container_list) throws IOException {
         //this method returns a list of vehicle available to be deployed on the trip. Vehicle_Classes.Vehicle eligibility is evaluated based on the arrival base's landing ability (False means only accessible to ships) whether a vehicle is capable of finishing a trip given a list of containers and trip length (by calling the successAssement method from the Vehicle_Classes.Vehicle Class), whether it is on another trip on the given trip duration.
-        ArrayList<Vehicle> deployable_vehicles = new ArrayList<Vehicle>();
         ArrayList<Vehicle> unavailable_vehicles = new ArrayList<Vehicle>();
         ArrayList<Vehicle> vehicles = Vehicle.getVehicles();
+        ArrayList<Vehicle> deployable_vehicle = new ArrayList<Vehicle>();
+        System.out.println(Utlity.vehicle_Table(vehicles));
         File file = new File("Trip.json");
-        if (file.length() == 0){
-            System.out.println("true");
-            if (port_of_arrival.isLandingAbility()){
-                for (Vehicle vehicle: vehicles){
+        if (!file.exists()){
+            for (Vehicle vehicle: vehicles){
+                if (port_of_arrival.isLandingAbility()){
                     if (vehicle.getCurrent_port().equals(port) && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival))){
-                        deployable_vehicles.add(vehicle);
+                        deployable_vehicle.add(vehicle);
                     }
                 }
-            }
-            else {
-                for (Vehicle vehicle: vehicles){
-                    if (vehicle.getCurrent_port().equals(port) && vehicle.getVid().startsWith("SH") && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival))){
-                        deployable_vehicles.add(vehicle);
+                else {
+                    if (vehicle.getCurrent_port().equals(port) && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival))){
+                        deployable_vehicle.add(vehicle);
                     }
                 }
             }
         }
         else {
-            System.out.println("false");
             for (Trip trip: FileIOUtil.ReadTripFromFile()){
                 if (trip.getD_port().equals(port)){
-                    if ((!date_of_departure.after(trip.date_of_arrival) && !date_of_departure.before(trip.date_of_departure)) || ((!date_of_arrival.after(trip.date_of_arrival) && !date_of_arrival.before(trip.date_of_departure)))){
+                    if ((date_of_departure.after(trip.date_of_arrival) && date_of_departure.before(trip.date_of_departure)) || ((date_of_arrival.after(trip.date_of_arrival) && date_of_arrival.before(trip.date_of_departure))) || (date_of_departure.equals(trip.date_of_arrival) || date_of_departure.equals(trip.date_of_departure)) || (date_of_arrival.equals(trip.date_of_arrival) || date_of_arrival.equals(trip.date_of_departure))){
                         unavailable_vehicles.add(trip.getVehicle());
                     }
                 }
             }
 
             for (Vehicle vehicle: vehicles){
+                System.out.println(vehicle.getVid() + ": " + unavailable_vehicles.contains(vehicle));
+
                 if (port_of_arrival.isLandingAbility()){
-                    if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival)) && vehicle.getCurrent_port().equals(port)){
-                        deployable_vehicles.add(vehicle);
+                    if (vehicle.getCurrent_port().equals(port) && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival)) && !unavailable_vehicles.contains(vehicle)){
+                        deployable_vehicle.add(vehicle);
                     }
                 }
                 else {
-                    if (!unavailable_vehicles.contains(vehicle) && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival)) && vehicle.getName().startsWith("SH") && vehicle.getCurrent_port().equals(port)){
-                        deployable_vehicles.add(vehicle);
+                    if (vehicle.getCurrent_port().equals(port) && vehicle.successAssessment(container_list, port.distanceCalc(port_of_arrival)) && !unavailable_vehicles.contains(vehicle) && vehicle.getVid().startsWith("SH")){
+                        deployable_vehicle.add(vehicle);
                     }
                 }
-
             }
+
         }
-        return deployable_vehicles;
+        return deployable_vehicle;
     }
 
 
