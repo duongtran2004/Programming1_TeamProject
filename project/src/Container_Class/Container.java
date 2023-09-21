@@ -19,8 +19,8 @@ public class Container implements Serializable {
     private  Port current_port;
     //@JsonBackReference (value = "vehicles")
     private Vehicle current_vehicle = null;
-    private double fuel_consumption_per_km_on_ship;
-    private double fuel_consumption_per_km_on_truck;
+    private static double fuel_consumption_per_km_on_ship;
+    private static double fuel_consumption_per_km_on_truck;
 
     public Container(){
 
@@ -83,7 +83,6 @@ public class Container implements Serializable {
         }
         port.setNumberofContainersOnsite(port.getNumberofContainersOnsite() + 1);
         port.setCurrentCapacity(port.getCurrentCapacity() + weight);
-        FileIOUtil.updatePortFromFile(port);
         return true;
 
     }
@@ -115,24 +114,29 @@ public class Container implements Serializable {
         return this.fuel_consumption_per_km_on_truck;
     }
 
-    public void setCid(String cid) {
+    public void setCid(String cid) throws IOException {
         this.cid = cid;
+        FileIOUtil.updateContainerFromFile(this);
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws IOException {
         this.name = name;
+        FileIOUtil.updateContainerFromFile(this);
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(double weight) throws IOException {
         this.weight = weight;
+        FileIOUtil.updateContainerFromFile(this);
     }
 
-    public void setCurrent_port(Port current_port) {
+    public void setCurrent_port(Port current_port) throws IOException {
         this.current_port = current_port;
+        FileIOUtil.updateContainerFromFile(this);
     }
 
-    public void setCurrent_vehicle(Vehicle vehicle){
+    public void setCurrent_vehicle(Vehicle vehicle) throws IOException {
         this.current_vehicle = vehicle;
+        FileIOUtil.updateContainerFromFile(this);
     }
 
     public void setFuel_consumption_per_km_on_ship(double fuel_consumption_per_km_on_ship) {
