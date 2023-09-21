@@ -86,32 +86,43 @@ public class Trip implements Serializable {
     //---------------------------------------------------Setter----------------------------------------//
 
 
-    public void setVehicle(Vehicle vehicle) {
+    public void setVehicle(Vehicle vehicle) throws IOException {
         this.vehicle = vehicle;
+        FileIOUtil.updateTripFromFile(this);
     }
 
-    public void setTid(String tid) {
+    public void setTid(String tid) throws IOException {
         this.tid = tid;
+        FileIOUtil.updateTripFromFile(this);
     }
 
-    public void setD_port(Port d_port) {
+    public void setD_port(Port d_port) throws IOException {
         this.d_port = d_port;
+        FileIOUtil.updateTripFromFile(this);
     }
 
-    public void setA_port(Port a_port) {
+    public void setA_port(Port a_port) throws IOException {
         this.a_port = a_port;
+        FileIOUtil.updateTripFromFile(this);
     }
 
-    public void setDate_of_departure(Date date_of_departure) {
+    public void setDate_of_departure(Date date_of_departure) throws IOException {
         this.date_of_departure = date_of_departure;
+        FileIOUtil.updateTripFromFile(this);
     }
 
-    public void setDate_of_arrival(Date date_of_arrival) {
+    public void setDate_of_arrival(Date date_of_arrival) throws IOException {
         this.date_of_arrival = date_of_arrival;
+        FileIOUtil.updateTripFromFile(this);
     }
 
-    public void setTo_be_delivered_containers(ArrayList<String> to_be_delivered_containers) {
+    public void setTo_be_delivered_containers(ArrayList<String> to_be_delivered_containers) throws IOException {
         this.to_be_delivered_containers = to_be_delivered_containers;
+        FileIOUtil.updateTripFromFile(this);
+    }
+
+    public static ArrayList<Trip> getTrip() throws IOException {
+        return FileIOUtil.ReadTripFromFile();
     }
 
 
