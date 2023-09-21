@@ -1,8 +1,13 @@
 package Port;
 
 import java.io.*;
+
+import Container_Class.Container;
+import Trip.Trip;
 import Users.*;
 import FileIO.*;
+import Vehicle_Classes.Vehicle;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
@@ -115,35 +120,327 @@ public class Port implements Serializable {
     //-----------------------------------------------------Setters---------------------------------------------//
 
 
-    public void setPid(String pid) {
+    public void setPid(String pid) throws IOException {
+
         this.pid = pid;
+        FileIOUtil.updatePortFromFile(this);
+        ArrayList<Vehicle> vehicles = Vehicle.getVehicles();
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!vehicles.isEmpty()){
+            for (Vehicle vehicle: vehicles){
+                if (vehicle.getCurrent_port().equals(this)){
+                    vehicle.setCurrent_port(this);
+                }
+            }
+        }
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_port().equals(this)){
+                    container.setCurrent_port(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getA_port().equals(this)){
+                    trip.setA_port(this);
+                }
+                else if (trip.getD_port().equals(this)){
+                    trip.setD_port(this);
+                }
+            }
+        }
+        ArrayList<Port_Manager> managers = Port_Manager.getPortManager();
+        if (!managers.isEmpty()){
+            for (Port_Manager manager: managers){
+                if (manager.getPort().equals(this)){
+                    manager.setPort(this);
+                }
+            }
+        }
+
+
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(double latitude) throws IOException {
         this.latitude = latitude;
+        FileIOUtil.updatePortFromFile(this);
+        ArrayList<Vehicle> vehicles = Vehicle.getVehicles();
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!vehicles.isEmpty()){
+            for (Vehicle vehicle: vehicles){
+                if (vehicle.getCurrent_port().equals(this)){
+                    vehicle.setCurrent_port(this);
+                }
+            }
+        }
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_port().equals(this)){
+                    container.setCurrent_port(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getA_port().equals(this)){
+                    trip.setA_port(this);
+                }
+                else if (trip.getD_port().equals(this)){
+                    trip.setD_port(this);
+                }
+            }
+        }
+        ArrayList<Port_Manager> managers = Port_Manager.getPortManager();
+        if (!managers.isEmpty()){
+            for (Port_Manager manager: managers){
+                if (manager.getPort().equals(this)){
+                    manager.setPort(this);
+                }
+            }
+        }
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(double longitude) throws IOException {
         this.longitude = longitude;
+        FileIOUtil.updatePortFromFile(this);
+        ArrayList<Vehicle> vehicles = Vehicle.getVehicles();
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!vehicles.isEmpty()){
+            for (Vehicle vehicle: vehicles){
+                if (vehicle.getCurrent_port().equals(this)){
+                    vehicle.setCurrent_port(this);
+                }
+            }
+        }
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_port().equals(this)){
+                    container.setCurrent_port(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getA_port().equals(this)){
+                    trip.setA_port(this);
+                }
+                else if (trip.getD_port().equals(this)){
+                    trip.setD_port(this);
+                }
+            }
+        }
+        ArrayList<Port_Manager> managers = Port_Manager.getPortManager();
+        if (!managers.isEmpty()){
+            for (Port_Manager manager: managers){
+                if (manager.getPort().equals(this)){
+                    manager.setPort(this);
+                }
+            }
+        }
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws IOException {
         this.name = name;
+        FileIOUtil.updatePortFromFile(this);
+        ArrayList<Vehicle> vehicles = Vehicle.getVehicles();
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!vehicles.isEmpty()){
+            for (Vehicle vehicle: vehicles){
+                if (vehicle.getCurrent_port().equals(this)){
+                    vehicle.setCurrent_port(this);
+                }
+            }
+        }
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_port().equals(this)){
+                    container.setCurrent_port(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getA_port().equals(this)){
+                    trip.setA_port(this);
+                }
+                else if (trip.getD_port().equals(this)){
+                    trip.setD_port(this);
+                }
+            }
+        }
+        ArrayList<Port_Manager> managers = Port_Manager.getPortManager();
+        if (!managers.isEmpty()){
+            for (Port_Manager manager: managers){
+                if (manager.getPort().equals(this)){
+                    manager.setPort(this);
+                }
+            }
+        }
     }
 
-    public void setStoringCapacity(double storingCapacity) {
+    public void setStoringCapacity(double storingCapacity) throws IOException {
         this.storingCapacity = storingCapacity;
+        FileIOUtil.updatePortFromFile(this);
+        ArrayList<Vehicle> vehicles = Vehicle.getVehicles();
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!vehicles.isEmpty()){
+            for (Vehicle vehicle: vehicles){
+                if (vehicle.getCurrent_port().equals(this)){
+                    vehicle.setCurrent_port(this);
+                }
+            }
+        }
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_port().equals(this)){
+                    container.setCurrent_port(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getA_port().equals(this)){
+                    trip.setA_port(this);
+                }
+                else if (trip.getD_port().equals(this)){
+                    trip.setD_port(this);
+                }
+            }
+        }
+        ArrayList<Port_Manager> managers = Port_Manager.getPortManager();
+        if (!managers.isEmpty()){
+            for (Port_Manager manager: managers){
+                if (manager.getPort().equals(this)){
+                    manager.setPort(this);
+                }
+            }
+        }
     }
 
-    public void setLandingAbility(boolean landingAbility) {
+    public void setLandingAbility(boolean landingAbility) throws IOException {
         this.landingAbility = landingAbility;
+        FileIOUtil.updatePortFromFile(this);
+        ArrayList<Vehicle> vehicles = Vehicle.getVehicles();
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!vehicles.isEmpty()){
+            for (Vehicle vehicle: vehicles){
+                if (vehicle.getCurrent_port().equals(this)){
+                    vehicle.setCurrent_port(this);
+                }
+            }
+        }
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_port().equals(this)){
+                    container.setCurrent_port(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getA_port().equals(this)){
+                    trip.setA_port(this);
+                }
+                else if (trip.getD_port().equals(this)){
+                    trip.setD_port(this);
+                }
+            }
+        }
+        ArrayList<Port_Manager> managers = Port_Manager.getPortManager();
+        if (!managers.isEmpty()){
+            for (Port_Manager manager: managers){
+                if (manager.getPort().equals(this)){
+                    manager.setPort(this);
+                }
+            }
+        }
     }
 
-    public void setNumberofContainersOnsite(int number) {
+    public void setNumberofContainersOnsite(int number) throws IOException {
         this.numberofContainersOnsite = number;
+        FileIOUtil.updatePortFromFile(this);
+        ArrayList<Vehicle> vehicles = Vehicle.getVehicles();
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        ArrayList<Port_Manager> managers = Port_Manager.getPortManager();
+        if (!vehicles.isEmpty()){
+            for (Vehicle vehicle: vehicles){
+                if (vehicle.getCurrent_port().equals(this)){
+                    vehicle.setCurrent_port(this);
+                }
+            }
+        }
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_port().equals(this)){
+                    container.setCurrent_port(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getA_port().equals(this)){
+                    trip.setA_port(this);
+                }
+                else if (trip.getD_port().equals(this)){
+                    trip.setD_port(this);
+                }
+            }
+        }
+        if (!managers.isEmpty()){
+            for (Port_Manager manager: managers){
+                if (manager.getPort().equals(this)){
+                    manager.setPort(this);
+                }
+            }
+        }
     }
-    public void setNumberofVehiclesOnsite(int numberofVehiclesOnsite) {
+    public void setNumberofVehiclesOnsite(int numberofVehiclesOnsite) throws IOException {
         this.numberofVehiclesOnsite = numberofVehiclesOnsite;
+        FileIOUtil.updatePortFromFile(this);
+        ArrayList<Vehicle> vehicles = Vehicle.getVehicles();
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!vehicles.isEmpty()){
+            for (Vehicle vehicle: vehicles){
+                if (vehicle.getCurrent_port().equals(this)){
+                    vehicle.setCurrent_port(this);
+                }
+            }
+        }
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_port().equals(this)){
+                    container.setCurrent_port(this);
+                }
+            }
+        }
+
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getA_port().equals(this)){
+                    trip.setA_port(this);
+                }
+                else if (trip.getD_port().equals(this)){
+                    trip.setD_port(this);
+                }
+            }
+        }
+        ArrayList<Port_Manager> managers = Port_Manager.getPortManager();
+        if (!managers.isEmpty()){
+            for (Port_Manager manager: managers){
+                if (manager.getPort().equals(this)){
+                    manager.setPort(this);
+                }
+            }
+        }
     }
 
     public double distanceCalc(Port targetPort){
