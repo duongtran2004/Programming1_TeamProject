@@ -1,5 +1,6 @@
 package Users;
 
+import FileIO.FileIOUtil;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -52,20 +53,44 @@ public class User implements Serializable{
     //-------------------------------------------------Setters---------------------------------//
 
 
-    public void setEid(String eid) {
+    public void setEid(String eid) throws IOException {
         this.eid = eid;
+        if (this instanceof Port_Manager){
+            FileIOUtil.updateManagerFromFile((Port_Manager) this);
+        }
+        else {
+            FileIOUtil.updateAdminFromFile((System_Admin) this);
+        }
     }
 
-    public void setUsername(String username) {
+    public void setUsername(String username) throws IOException {
         this.username = username;
+        if (this instanceof Port_Manager){
+            FileIOUtil.updateManagerFromFile((Port_Manager) this);
+        }
+        else {
+            FileIOUtil.updateAdminFromFile((System_Admin) this);
+        }
     }
 
-    public void setPassword(String password) {
+    public void setPassword(String password) throws IOException {
         this.password = password;
+        if (this instanceof Port_Manager){
+            FileIOUtil.updateManagerFromFile((Port_Manager) this);
+        }
+        else {
+            FileIOUtil.updateAdminFromFile((System_Admin) this);
+        }
     }
 
-    public void setRole(String role) {
+    public void setRole(String role) throws IOException {
         this.role = role;
+        if (this instanceof Port_Manager){
+            FileIOUtil.updateManagerFromFile((Port_Manager) this);
+        }
+        else {
+            FileIOUtil.updateAdminFromFile((System_Admin) this);
+        }
     }
 
 }
