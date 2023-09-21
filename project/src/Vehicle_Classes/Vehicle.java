@@ -64,31 +64,133 @@ public class Vehicle implements Serializable {
     //-------------------------------------------------Setters------------------------------------//
 
 
-    public void setVid(String vid) {
+    public void setVid(String vid) throws IOException {
         this.vid = vid;
+        FileIOUtil.updateVehicleFromFile(this);
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_vehicle().equals(this)){
+                    container.setCurrent_vehicle(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getVehicle().equals(this)){
+                    trip.setVehicle(this);
+                }
+            }
+        }
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws IOException {
         this.name = name;
+        FileIOUtil.updateVehicleFromFile(this);
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_vehicle().equals(this)){
+                    container.setCurrent_vehicle(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getVehicle().equals(this)){
+                    trip.setVehicle(this);
+                }
+            }
+        }
     }
 
     public void setCurrent_port(Port current_port) throws IOException {
         this.current_port = current_port;
+        FileIOUtil.updateVehicleFromFile(this);
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_vehicle().equals(this)){
+                    container.setCurrent_vehicle(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getVehicle().equals(this)){
+                    trip.setVehicle(this);
+                }
+            }
+        }
 
     }
 
     public void setFuel_capacity(double fuel_capacity) throws IOException {
         this.fuel_capacity = fuel_capacity;
+        FileIOUtil.updateVehicleFromFile(this);
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_vehicle().equals(this)){
+                    container.setCurrent_vehicle(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getVehicle().equals(this)){
+                    trip.setVehicle(this);
+                }
+            }
+        }
 
     }
 
     public void setCurrent_fuel(double current_fuel) throws IOException {
         this.current_fuel = current_fuel;
+        FileIOUtil.updateVehicleFromFile(this);
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_vehicle().equals(this)){
+                    container.setCurrent_vehicle(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getVehicle().equals(this)){
+                    trip.setVehicle(this);
+                }
+            }
+        }
 
     }
 
     public void setCarrying_capacity(double carrying_capacity) throws IOException {
         this.carrying_capacity = carrying_capacity;
+        FileIOUtil.updateVehicleFromFile(this);
+        ArrayList<Container> containers = Container.getContainer();
+        ArrayList<Trip> trips = Trip.getTrip();
+        if (!containers.isEmpty()){
+            for (Container container: containers){
+                if (container.getCurrent_vehicle().equals(this)){
+                    container.setCurrent_vehicle(this);
+                }
+            }
+        }
+        if (!trips.isEmpty()){
+            for (Trip trip: trips){
+                if (trip.getVehicle().equals(this)){
+                    trip.setVehicle(this);
+                }
+            }
+        }
 
     }
 
@@ -131,9 +233,8 @@ public class Vehicle implements Serializable {
             tanker_truck new_tanker = new tanker_truck("TT"+Vid, name, fuel_capacity, carrying_capacity, port);
             FileIOUtil.InputObjectIntoFile(new_tanker, "TankerTruck.json");
         }
-
         port.setNumberofVehiclesOnsite(port.getNumberofVehiclesOnsite() + 1);
-        FileIOUtil.updatePortFromFile(port);
+
 
 
         return true;
