@@ -18,6 +18,9 @@ public class Port_Manager extends User{
     public Port_Manager(){
 
     }
+    public static ArrayList<Port_Manager> getPortManager() throws IOException {
+        return FileIOUtil.ReadManagerFromFile();
+    }
 
 
 
@@ -45,8 +48,9 @@ public class Port_Manager extends User{
         return this.port;
     }
     //----------------------------------------Setter-------------------------------------//
-    public void setPort(Port port) {
+    public void setPort(Port port) throws IOException {
         this.port = port;
+        FileIOUtil.updateManagerFromFile(this);
     }
 
     public static Port_Manager queryManagerbyID(String Eid) throws IOException {
