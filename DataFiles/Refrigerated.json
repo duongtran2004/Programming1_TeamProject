@@ -1,0 +1,8 @@
+
+
+[{"cid":"RE33940988143","name":"Refrigerated 1","weight":6.0,"current_port":"3946148604","current_vehicle":null,"fuel_consumption_per_km_on_ship":4.5,"fuel_consumption_per_km_on_truck":5.4},
+{"cid":"RE09713192292","name":"Refrigerated 2","weight":6.0,"current_port":"8933154789","current_vehicle":null,"fuel_consumption_per_km_on_ship":4.5,"fuel_consumption_per_km_on_truck":5.4},
+{"cid":"RE84652486996","name":"Refrigerated 3","weight":6.0,"current_port":"5546694512","current_vehicle":null,"fuel_consumption_per_km_on_ship":4.5,"fuel_consumption_per_km_on_truck":5.4},
+{"cid":"RE92598583554","name":"Refrigerated 4","weight":6.0,"current_port":"9653214789","current_vehicle":null,"fuel_consumption_per_km_on_ship":4.5,"fuel_consumption_per_km_on_truck":5.4},
+{"cid":"RE68865569420","name":"Refrigerated 5","weight":6.0,"current_port":"63521456984","current_vehicle":null,"fuel_consumption_per_km_on_ship":4.5,"fuel_consumption_per_km_on_truck":5.4},
+{"cid":"RE64288231970","name":"Refrigerated 6","weight":6.0,"current_port":"3215685247","current_vehicle":null,"fuel_consumption_per_km_on_ship":4.5,"fuel_consumption_per_km_on_truck":5.4}]
