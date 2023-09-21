@@ -1,0 +1,8 @@
+
+
+
+[{"eid":"9228910832","username":"TrungLuong1999","password":"1234567890","role":"Port Manager","port":{"pid":"p-1","latitude":10.350763521711404,"longitude":107.06656901146908,"name":"VungTau","storingCapacity":8.7876688E7,"landingAbility":true}},
+{"eid":"2172393445","username":"HauNguyen2004","password":"0987654321","role":"Port Manager","port":{"pid":"p-2","latitude":1.3539389150639312,"longitude":103.85097857413851,"name":"Singapore","storingCapacity":8.7876688E7,"landingAbility":true}},
+{"eid":"5025831918","username":"DuongTran2004","password":"1122334455","role":"Port Manager","port":{"pid":"p-3","latitude":13.678013256725489,"longitude":100.52214040968757,"name":"Bangkok","storingCapacity":8.7876688E7,"landingAbility":true}},
+{"eid":"5719382758","username":"ChiNghi","password":"9988776655","role":"Port Manager","port":{"pid":"p-4","latitude":11.593050570216564,"longitude":102.97761914843173,"name":"Sihanoukville","storingCapacity":8.7876688E7,"landingAbility":false}},
+{"eid":"4036242215","username":"JohnDoe123","password":"2244668800","role":"Port Manager","port":{"pid":"p-5","latitude":3.8017726184842022,"longitude":100.98508365208035,"name":"Malaca","storingCapacity":8.7876688E7,"landingAbility":false}}]
