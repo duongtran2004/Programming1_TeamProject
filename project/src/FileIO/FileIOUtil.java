@@ -34,28 +34,39 @@ public class FileIOUtil {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("Ship.json");
         ArrayList<ship> list = new ArrayList<ship>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<ship>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<ship>>() {});
+        }
+
         return list;
     }
     public static ArrayList<basic_truck> ReadBasicTruckFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("BasicTruck.json");
         ArrayList<basic_truck> list = new ArrayList<basic_truck>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<basic_truck>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<basic_truck>>() {});
+        }
+
         return list;
     }
     public static ArrayList<reefer_truck> ReadReeferFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("ReeferTruck.json");
         ArrayList<reefer_truck> list = new ArrayList<reefer_truck>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<reefer_truck>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<reefer_truck>>() {});
+        }
+
         return list;
     }
     public static ArrayList<tanker_truck> ReadTankerFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("TankerTruck.json");
         ArrayList<tanker_truck> list = new ArrayList<tanker_truck>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<tanker_truck>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<tanker_truck>>() {});
+        }
         return list;
     }
 
@@ -63,14 +74,20 @@ public class FileIOUtil {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("DryStorage.json");
         ArrayList<Dry_Storage> list = new ArrayList<Dry_Storage>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<Dry_Storage>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<Dry_Storage>>() {});
+        }
+
         return list;
     }
     public static ArrayList<Open_Top> ReadOpen_TopFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("OpenTop.json");
         ArrayList<Open_Top> list = new ArrayList<Open_Top>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<Open_Top>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<Open_Top>>() {});
+        }
+
         return list;
     }
     public static ArrayList<Open_Side> ReadOpen_SideFromFile() throws IOException {
@@ -91,7 +108,9 @@ public class FileIOUtil {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("Liquid.json");
         ArrayList<Liquid> list = new ArrayList<Liquid>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<Liquid>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<Liquid>>() {});
+        }
         return list;
     }
 
@@ -100,14 +119,18 @@ public class FileIOUtil {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("Trip.json");
         ArrayList<Trip> list = new ArrayList<Trip>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<Trip>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<Trip>>() {});
+        }
         return list;
     }
     public static ArrayList<Port_Manager> ReadManagerFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("PortManager.json");
         ArrayList<Port_Manager> list = new ArrayList<Port_Manager>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<Port_Manager>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<Port_Manager>>() {});
+        }
         return list;
     }
 
@@ -115,7 +138,10 @@ public class FileIOUtil {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("SystemAdmin.json");
         ArrayList<System_Admin> list = new ArrayList<System_Admin>();
-        list = mapper.readValue(file, new TypeReference<ArrayList<System_Admin>>() {});
+        if (file.length() > 0){
+            list = mapper.readValue(file, new TypeReference<ArrayList<System_Admin>>() {});
+        }
+
         return list;
     }
 
